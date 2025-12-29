@@ -5,7 +5,9 @@
 	"main": "server.ts",
 	"scripts": {
 		"dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"fetch-cards": "ts-node scripts/fetch-all-cards.ts",
+		"populate-cards-index": "ts-node scripts/populate-cards-index.ts"
 	},
 	"keywords": [],
 	"author": "",
