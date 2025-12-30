@@ -14,7 +14,10 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 app.use('/users', usersRouter);
+
+console.log('Mounting /cards router');
 app.use('/cards', cardsRouter);
+
 const PORT = 3000;
 app.listen(PORT, () => {
 	console.log(`Server listening on port ${PORT}`);
