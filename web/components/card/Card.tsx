@@ -50,20 +50,18 @@ export default function Card({ card, onClick }: CardProps) {
 						<p className='text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide'>
 							Set
 						</p>
-						<p className='text-xs md:text-sm text-gray-700 dark:text-gray-300 font-medium'>
+						<p className='text-xs md:text-sm text-gray-700 dark:text-gray-300 font-medium line-clamp-1'>
 							{card.set_name}
 						</p>
 					</div>
 				)}
 
 				{/* Rarity */}
-				{card.rarity && (
-					<div className='pt-1'>
-						<span className='inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-500/20 via-indigo-500/20 to-pink-500/20 dark:from-purple-400/30 dark:via-indigo-400/30 dark:to-pink-400/30 text-purple-700 dark:text-purple-200 border border-purple-300/50 dark:border-purple-500/50 backdrop-blur-sm shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-300'>
-							{card.rarity}
-						</span>
-					</div>
-				)}
+				<div className='pt-1'>
+					<span className='inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-500/20 via-indigo-500/20 to-pink-500/20 dark:from-purple-400/30 dark:via-indigo-400/30 dark:to-pink-400/30 text-purple-700 dark:text-purple-200 border border-purple-300/50 dark:border-purple-500/50 backdrop-blur-sm shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-300'>
+						{card.rarity || 'Unknown'}
+					</span>
+				</div>
 
 				{/* Add to Binder Button */}
 				<button
