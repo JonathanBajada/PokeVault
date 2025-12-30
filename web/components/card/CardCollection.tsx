@@ -289,7 +289,7 @@ export default function CardCollection({
 						<div className='mb-6 text-sm text-gray-600'>
 							Showing {data.data.length} of {data.total} cards
 						</div>
-						<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6'>
+						<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8'>
 							{data.data.map((card) => (
 								<Card
 									key={card.id}

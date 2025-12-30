@@ -13,62 +13,70 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 	const [added, setAdded] = useState(isInBinder);
 
 	const handleAddToBinder = (e: React.MouseEvent) => {
-		e.stopPropagation(); // Prevent card click from firing
+		e.stopPropagation();
 		setAdded(!added);
-		// TODO: Add API call to add/remove from binder
 	};
 
-	// Determine rarity banner color - purple for Holo, blue for regular
-	const rarityBannerColor = card.rarity?.includes('Holo')
-		? 'bg-purple-600/90'
-		: 'bg-blue-600/90';
+	const isHolo = card.rarity?.includes('Holo');
 
-	// Determine border color to match rarity exactly
-	const borderColor = card.rarity?.includes('Holo')
-		? 'border-purple-600'
-		: 'border-blue-600';
+	const rarityBannerColor = isHolo ? 'bg-purple-600/80' : 'bg-blue-600/80';
+
+	const borderStyle = isHolo
+		? 'border border-purple-600/70 shadow-[0_8px_30px_rgba(168,85,247,0.25)]'
+		: 'border border-blue-600/70 shadow-[0_8px_30px_rgba(37,99,235,0.25)]';
 
 	return (
 		<div
-			className={`relative rounded-2xl overflow-hidden border-2 ${borderColor} bg-white/5 transition-all duration-300 group cursor-pointer`}
+			className={`relative rounded-2xl ${borderStyle}
+				transition-all duration-300 group cursor-pointer
+				group-hover:-translate-y-1
+				group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]`}
 			onClick={onClick}
-			style={{
-				boxShadow: 'none',
-				filter: 'none',
-				textShadow: 'none',
-			}}
 		>
-			{/* Rarity Banner at Top */}
-			<div
-				className={`absolute top-0 left-0 right-0 ${rarityBannerColor} text-white text-xs font-bold py-1 px-3 text-center z-20`}
-			>
-				{card.rarity || 'Unknown'}
+			{/* ================= TOP RARITY BANNER ================= */}
+			<div className='absolute top-0 left-0 right-0 overflow-hidden rounded-t-2xl z-20'>
+				<div
+					className={`${rarityBannerColor}
+						text-white text-[11px] font-semibold tracking-wide
+						py-1 px-3 text-center`}
+				>
+					{card.rarity || 'Unknown'}
+				</div>
 			</div>
 
-			{/* Image Container */}
-			<div className='aspect-square bg-white/30 flex items-center justify-center p-3 relative overflow-hidden mt-6'>
+			{/* ================= IMAGE ================= */}
+			<div className='aspect-square bg-white/30 flex items-center justify-center p-2 relative overflow-hidden mt-7'>
+				{/* Inner frame */}
+				<div className='absolute inset-0 rounded-md ring-1 ring-black/10 z-0' />
+
 				{card.image_small ? (
 					<img
 						src={card.image_small}
 						alt={card.name}
-						className='w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 relative z-10'
+						className='w-full h-full object-contain relative z-10'
 						loading='lazy'
 					/>
 				) : (
 					<div className='text-gray-400 text-sm'>No Image</div>
 				)}
-				{/* Shimmer effect on hover */}
-				<div className='absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-20'></div>
+
+				{/* Hover shimmer */}
+				<div
+					className='absolute inset-0
+						bg-gradient-to-r from-transparent via-white/20 to-transparent
+						-translate-x-full group-hover:translate-x-full
+						transition-transform duration-1000 z-20'
+				/>
 			</div>
 
-			{/* Card Info */}
-			<div className='p-4 space-y-2 bg-white/10  relative z-10'>
-				{/* Card Name */}
+			{/* ================= BOTTOM INFO PANEL ================= */}
+			<div className='p-3 space-y-1.5 bg-white/80 rounded-b-2xl relative z-10'>
+				{/* Name */}
 				<h3 className='font-bold text-gray-900 text-sm leading-tight line-clamp-2 min-h-[2rem]'>
 					{card.name}
 				</h3>
 
-				{/* Set Name */}
+				{/* Set */}
 				{card.set_name && (
 					<div className='space-y-0.5'>
 						<p className='text-xs text-gray-600 font-medium'>SET</p>
@@ -78,77 +86,34 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 					</div>
 				)}
 
-				{/* Rarity Badge */}
+				{/* Rarity badge */}
 				<div className='pt-1'>
 					<span
-						className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-							card.rarity?.includes('Holo')
-								? 'bg-purple-500/20 text-purple-700 border border-purple-300/50'
-								: 'bg-blue-500/20 text-blue-700 border border-blue-300/50'
-						}`}
+						className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
+							${
+								isHolo
+									? 'bg-purple-500/20 text-purple-700 border border-purple-300/50'
+									: 'bg-blue-500/20 text-blue-700 border border-blue-300/50'
+							}`}
 					>
 						{card.rarity || 'Unknown'}
 					</span>
 				</div>
 
-				{/* Add to Binder Button */}
+				{/* Add to Binder */}
 				<button
 					onClick={handleAddToBinder}
-					className={`w-full mt-3 flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg transition-all duration-300 ${
-						added
-							? 'bg-green-500 text-white hover:bg-green-600'
-							: 'bg-purple-600 text-white hover:bg-purple-700'
-					}`}
+					aria-pressed={added}
+					className={`w-full mt-3 flex items-center justify-center gap-2
+						px-3 py-2 text-xs font-semibold rounded-lg
+						transition-all duration-300
+						${
+							added
+								? 'bg-green-500/90 text-white hover:bg-green-600'
+								: 'bg-purple-600/80 text-white hover:bg-purple-700'
+						}`}
 				>
-					{added ? (
-						<>
-							<svg
-								width='16'
-								height='16'
-								viewBox='0 0 24 24'
-								fill='none'
-								className='w-4 h-4'
-							>
-								<path
-									d='M9 12L11 14L15 10'
-									stroke='currentColor'
-									strokeWidth='2'
-									strokeLinecap='round'
-									strokeLinejoin='round'
-								/>
-								<circle
-									cx='12'
-									cy='12'
-									r='10'
-									stroke='currentColor'
-									strokeWidth='2'
-								/>
-							</svg>
-							✔ Added!
-						</>
-					) : (
-						<>
-							<svg
-								width='16'
-								height='16'
-								viewBox='0 0 24 24'
-								fill='none'
-								className='w-4 h-4'
-							>
-								<path
-									d='M7 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3Z'
-									stroke='currentColor'
-									strokeWidth='2'
-									strokeLinecap='round'
-									strokeLinejoin='round'
-								/>
-								<circle cx='7' cy='8' r='1.5' fill='currentColor' />
-								<circle cx='7' cy='12' r='1.5' fill='currentColor' />
-								<circle cx='7' cy='16' r='1.5' fill='currentColor' />
-							</svg>
-							Add to My Binder
-						</>
-					)}
+					{added ? '✔ Added!' : 'Add to My Binder'}
 				</button>
 			</div>
 		</div>
