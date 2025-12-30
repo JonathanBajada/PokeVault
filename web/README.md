@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎮 PlayVault - Frontend
 
-## Getting Started
+**PlayVault** frontend is a Next.js application providing a beautiful and responsive interface for browsing and searching trading cards.
 
-First, run the development server:
+## 🛠️ Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+-  **Next.js 16** - React framework with App Router
+-  **TypeScript** - Type-safe development
+-  **Tailwind CSS 4** - Utility-first CSS framework
+-  **React Query (TanStack Query)** - Data fetching and caching
+-  **React 19** - Latest React features
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+-  Node.js (v18 or higher)
+-  Backend server running on `http://localhost:4000`
+
+### Installation
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 📝 Available Scripts
+
+-  `npm run dev` - Start Next.js development server
+-  `npm run build` - Build for production
+-  `npm run start` - Start production server
+-  `npm run lint` - Run ESLint
+-  `npm run typecheck` - Type check TypeScript files
+
+## 🎨 Features
+
+### Pages
+
+-  **Home** (`/`) - Landing page
+-  **Cards** (`/cards`) - Browse and search cards
+-  **Search** (`/search`) - Advanced search page
+
+### Components
+
+-  **Card** - Individual card display component
+-  **CardModal** - Expanded card view modal
+-  **Navbar** - Navigation bar with login button
+
+### Key Features
+
+-  Responsive grid layout for cards
+-  Real-time search with debouncing
+-  Set filtering dropdown
+-  Pagination with page navigation
+-  Card modal for expanded view
+-  Dark mode support
+-  Mobile-responsive design
+
+## 📁 Project Structure
+
+```
+web/
+├── app/                 # Next.js App Router
+│   ├── cards/          # Cards page
+│   ├── search/         # Search page
+│   ├── layout.tsx      # Root layout
+│   └── provider.tsx    # React Query provider
+├── components/         # React components
+│   ├── Card.tsx
+│   ├── CardModal.tsx
+│   └── Navbar.tsx
+├── lib/                # Utilities
+│   └── api/            # API clients
+│       └── cards.ts
+└── public/             # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎨 Styling
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The application uses Tailwind CSS 4 with:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+-  Custom color scheme (indigo/purple gradient)
+-  Dark mode support
+-  Responsive breakpoints
+-  Smooth animations and transitions
 
-## Learn More
+## 🔌 API Integration
 
-To learn more about Next.js, take a look at the following resources:
+The frontend communicates with the backend API at `http://localhost:4000`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-  `GET /cards` - Fetch paginated cards
+-  `GET /cards/sets` - Fetch all unique sets
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🚀 Deployment
 
-## Deploy on Vercel
+The easiest way to deploy is using [Vercel](https://vercel.com):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+For more deployment options, see the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying).

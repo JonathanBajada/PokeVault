@@ -13,7 +13,7 @@ export default function Navbar() {
 							🎮 PlayVault
 						</Link>
 					</div>
-					<div className='flex space-x-4 md:space-x-6'>
+					<div className='flex items-center space-x-4 md:space-x-6'>
 						<Link
 							href='/'
 							className='text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm md:text-base font-medium transition-colors'
@@ -31,6 +31,12 @@ export default function Navbar() {
 							className='text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm md:text-base font-medium transition-colors'
 						>
 							Search
+						</Link>
+						<Link
+							href='/login'
+							className='bg-white text-indigo-600 hover:bg-gray-100 px-4 py-2 rounded-lg text-sm md:text-base font-semibold transition-colors shadow-md hover:shadow-lg'
+						>
+							Login
 						</Link>
 					</div>
 				</div>
