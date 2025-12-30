@@ -1,6 +1,6 @@
-# 🎮 PlayVault - Frontend
+# 🎮 PokeVault - Frontend
 
-**PlayVault** frontend is a Next.js application providing a beautiful and responsive interface for browsing and searching trading cards.
+**PokeVault** frontend is a Next.js application providing a beautiful and responsive interface for browsing and searching trading cards.
 
 ## 🛠️ Tech Stack
 

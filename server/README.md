@@ -1,6 +1,6 @@
-# 🎮 PlayVault - Backend Server
+# 🎮 PokeVault - Backend Server
 
-**PlayVault** backend server provides a RESTful API for the card collection platform.
+**PokeVault** backend server provides a RESTful API for the card collection platform.
 
 ## 🛠️ Tech Stack
 

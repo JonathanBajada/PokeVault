@@ -26,8 +26,8 @@ export default function CardCollection({
 	initialSet = '',
 	limit = 20,
 	showHeader = true,
-	headerTitle = 'Card Collection',
-	headerDescription = 'Browse through your collection of cards',
+	headerTitle = 'Card Catalogue',
+	headerDescription = 'Explore card sets and build your binder',
 }: CardCollectionProps) {
 	const [page, setPage] = useState(1);
 	const [search, setSearch] = useState(initialSearch);

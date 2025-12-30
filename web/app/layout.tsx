@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: 'PlayVault - Card Collection',
-	description: 'Discover and collect cards with PlayVault',
+	title: 'PokeVault - Card Collection',
+	description: 'Discover and collect cards with PokeVault',
 };
 
 export default function RootLayout({
