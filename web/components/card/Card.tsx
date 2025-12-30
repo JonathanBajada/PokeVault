@@ -28,7 +28,7 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 	return (
 		<div
 			className={`relative rounded-2xl ${borderStyle}
-				transition-all duration-300 group cursor-pointer
+				group cursor-pointer transition-shadow duration-200 ease-out
 				group-hover:-translate-y-1
 				group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]`}
 			onClick={onClick}
@@ -106,7 +106,7 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 					aria-pressed={added}
 					className={`w-full mt-3 flex items-center justify-center gap-2
 						px-3 py-2 text-xs font-semibold rounded-lg
-						transition-all duration-300
+						transition-colors duration-200
 						${
 							added
 								? 'bg-green-500/90 text-white hover:bg-green-600'
