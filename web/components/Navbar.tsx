@@ -14,7 +14,7 @@ export default function Navbar() {
 	};
 
 	return (
-		<nav className='bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'>
+		<nav className='fixed top-0 left-0 right-0 z-50 border-b border-white/10 shadow-2xl backdrop-blur-xl bg-gradient-to-r from-indigo-600/90 via-purple-600/90 to-pink-600/90'>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
 				<div className='flex items-center justify-between h-16'>
 					<div className='flex items-center'>
@@ -52,10 +52,10 @@ export default function Navbar() {
 					<div className='flex items-center space-x-4 md:space-x-6'>
 						<Link
 							href='/'
-							className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm md:text-base font-medium transition-colors ${
+							className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm md:text-base font-medium transition-all duration-300 ${
 								isActive('/')
-									? 'text-white bg-white/20 hover:bg-white/30'
-									: 'text-white hover:text-gray-200'
+									? 'text-white bg-white/20 hover:bg-white/30 backdrop-blur-sm shadow-lg'
+									: 'text-white/90 hover:text-white hover:bg-white/10'
 							}`}
 						>
 							<svg
@@ -98,10 +98,10 @@ export default function Navbar() {
 						</Link>
 						<Link
 							href='/marketplace'
-							className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm md:text-base font-medium transition-colors ${
+							className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm md:text-base font-medium transition-all duration-300 ${
 								isActive('/marketplace')
-									? 'text-white bg-white/20 hover:bg-white/30'
-									: 'text-white hover:text-gray-200'
+									? 'text-white bg-white/20 hover:bg-white/30 backdrop-blur-sm shadow-lg'
+									: 'text-white/90 hover:text-white hover:bg-white/10'
 							}`}
 						>
 							<svg
@@ -139,10 +139,10 @@ export default function Navbar() {
 						</Link>
 						<Link
 							href='/binder'
-							className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm md:text-base font-medium transition-colors ${
+							className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm md:text-base font-medium transition-all duration-300 ${
 								isActive('/binder')
-									? 'text-white bg-white/20 hover:bg-white/30'
-									: 'text-white hover:text-gray-200'
+									? 'text-white bg-white/20 hover:bg-white/30 backdrop-blur-sm shadow-lg'
+									: 'text-white/90 hover:text-white hover:bg-white/10'
 							}`}
 						>
 							<svg
@@ -211,7 +211,7 @@ export default function Navbar() {
 						</Link>
 						<Link
 							href='/login'
-							className='bg-white text-indigo-600 hover:bg-gray-100 px-4 py-2 rounded-lg text-sm md:text-base font-semibold transition-colors shadow-md hover:shadow-lg'
+							className='bg-white/95 text-indigo-600 hover:bg-white px-4 py-2 rounded-xl text-sm md:text-base font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 backdrop-blur-sm'
 						>
 							Login
 						</Link>
