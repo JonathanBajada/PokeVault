@@ -3,16 +3,32 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchCards, fetchSets, Card as CardType } from '@/lib/api/cards';
-import Card from '@/components/Card';
-import CardModal from '@/components/CardModal';
+import Card from '@/components/card/Card';
+import CardModal from '@/components/card/CardModal';
 
-export default function CardsPage() {
+interface CardCollectionProps {
+	// Optional props if you want to customize behavior
+	initialSearch?: string;
+	initialSet?: string;
+	limit?: number;
+	showHeader?: boolean;
+	headerTitle?: string;
+	headerDescription?: string;
+}
+
+export default function CardCollection({
+	initialSearch = '',
+	initialSet = '',
+	limit = 20,
+	showHeader = true,
+	headerTitle = 'Card Collection',
+	headerDescription = 'Browse through your collection of cards',
+}: CardCollectionProps) {
 	const [page, setPage] = useState(1);
-	const [search, setSearch] = useState('');
-	const [debouncedSearch, setDebouncedSearch] = useState('');
-	const [selectedSet, setSelectedSet] = useState<string>('');
+	const [search, setSearch] = useState(initialSearch);
+	const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+	const [selectedSet, setSelectedSet] = useState<string>(initialSet);
 	const [selectedCard, setSelectedCard] = useState<CardType | null>(null);
-	const limit = 20;
 
 	// Debounce search input
 	useEffect(() => {
@@ -75,14 +91,16 @@ export default function CardsPage() {
 		<div className='min-h-screen bg-gray-50 dark:bg-gray-900 py-8'>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
 				{/* Header */}
-				<div className='mb-8'>
-					<h1 className='text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2'>
-						Card Collection
-					</h1>
-					<p className='text-gray-600 dark:text-gray-400'>
-						Browse through your collection of cards
-					</p>
-				</div>
+				{showHeader && (
+					<div className='mb-8'>
+						<h1 className='text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2'>
+							{headerTitle}
+						</h1>
+						<p className='text-gray-600 dark:text-gray-400'>
+							{headerDescription}
+						</p>
+					</div>
+				)}
 
 				{/* Search and Filter Bar */}
 				<div className='mb-8'>
