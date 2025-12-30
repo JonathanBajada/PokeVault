@@ -1,20 +1,62 @@
 import { pool } from '../db';
 
-export async function getCards(page: number, limit: number) {
+type CardFilters = {
+	search?: string;
+	rarity?: string;
+	set?: string;
+};
+
+export async function getCards(
+	page: number,
+	limit: number,
+	filters: CardFilters,
+) {
 	const safeLimit = Math.min(limit, 20);
 	const offset = (page - 1) * safeLimit;
 
-	const dataPromise = pool.query(
-		`
+	const conditions: string[] = [];
+	const values: any[] = [];
+
+	// SEARCH (name)
+	if (filters.search) {
+		values.push(`%${filters.search}%`);
+		conditions.push(`name ILIKE $${values.length}`);
+	}
+
+	// RARITY
+	if (filters.rarity) {
+		values.push(filters.rarity);
+		conditions.push(`rarity = $${values.length}`);
+	}
+
+	// SET
+	if (filters.set) {
+		values.push(filters.set);
+		conditions.push(`set_name = $${values.length}`);
+	}
+
+	const whereClause =
+		conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+	// Data query
+	const dataQuery = `
 		SELECT id, name, set_name, rarity, image_small
 		FROM cards
+		${whereClause}
 		ORDER BY name
-		LIMIT $1 OFFSET $2
-		`,
-		[safeLimit, offset],
-	);
+		LIMIT $${values.length + 1}
+		OFFSET $${values.length + 2}
+	`;
 
-	const countPromise = pool.query(`SELECT COUNT(*) FROM cards`);
+	// Count query
+	const countQuery = `
+		SELECT COUNT(*) FROM cards
+		${whereClause}
+	`;
+
+	const dataPromise = pool.query(dataQuery, [...values, safeLimit, offset]);
+
+	const countPromise = pool.query(countQuery, values);
 
 	const [dataResult, countResult] = await Promise.all([
 		dataPromise,
