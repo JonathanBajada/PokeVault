@@ -115,12 +115,12 @@ export default function CardCollection({
 	}
 
 	return (
-		<div className='min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-950 dark:via-indigo-950/20 dark:to-purple-950/20 py-8 relative'>
+		<div className='min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-blue-200 py-8 relative'>
 			{/* Animated background elements */}
 			<div className='absolute inset-0 overflow-hidden pointer-events-none'>
 				<div className='absolute top-0 left-1/4 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl animate-pulse'></div>
 				<div
-					className='absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-300/20 rounded-full blur-3xl animate-pulse'
+					className='absolute bottom-0 right-1/4 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl animate-pulse'
 					style={{ animationDelay: '1s' }}
 				></div>
 			</div>
@@ -129,12 +129,10 @@ export default function CardCollection({
 				{/* Header */}
 				{showHeader && (
 					<div className='mb-8'>
-						<h1 className='text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent mb-3 drop-shadow-sm'>
+						<h1 className='text-4xl md:text-5xl font-extrabold text-purple-700 mb-3 drop-shadow-sm'>
 							{headerTitle}
 						</h1>
-						<p className='text-gray-600 dark:text-gray-300 text-lg'>
-							{headerDescription}
-						</p>
+						<p className='text-gray-600 text-lg'>{headerDescription}</p>
 					</div>
 				)}
 
@@ -148,7 +146,7 @@ export default function CardCollection({
 								placeholder='Search cards by name...'
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
-								className='w-full px-4 py-3 pl-10 pr-4 text-gray-900 dark:text-white bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-400/50 outline-none transition-all shadow-lg hover:shadow-xl'
+								className='w-full px-4 py-3 pl-10 pr-4 text-gray-900 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400 outline-none transition-all shadow-md hover:shadow-lg'
 							/>
 							<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
 								<svg
@@ -172,7 +170,7 @@ export default function CardCollection({
 							<select
 								value={selectedSet}
 								onChange={(e) => handleSetChange(e.target.value)}
-								className='w-full px-4 py-3 pr-10 text-gray-900 dark:text-white bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-400/50 outline-none transition-all appearance-none cursor-pointer shadow-lg hover:shadow-xl'
+								className='w-full px-4 py-3 pl-10 pr-10 text-gray-900 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400 outline-none transition-all appearance-none cursor-pointer shadow-md hover:shadow-lg'
 							>
 								<option value=''>All Sets</option>
 								{uniqueSets.map((set) => (
@@ -181,6 +179,21 @@ export default function CardCollection({
 									</option>
 								))}
 							</select>
+							<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+								<svg
+									className='h-5 w-5 text-purple-600'
+									fill='none'
+									stroke='currentColor'
+									viewBox='0 0 24 24'
+								>
+									<path
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										strokeWidth={2}
+										d='M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10'
+									/>
+								</svg>
+							</div>
 							<div className='absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none'>
 								<svg
 									className='h-5 w-5 text-gray-400'
@@ -203,7 +216,7 @@ export default function CardCollection({
 							<select
 								value={selectedRarity}
 								onChange={(e) => handleRarityChange(e.target.value)}
-								className='w-full px-4 py-3 pr-10 text-gray-900 dark:text-white bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-400/50 outline-none transition-all appearance-none cursor-pointer shadow-lg hover:shadow-xl'
+								className='w-full px-4 py-3 pl-10 pr-10 text-gray-900 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400 outline-none transition-all appearance-none cursor-pointer shadow-md hover:shadow-lg'
 							>
 								<option value=''>All Rarities</option>
 								{uniqueRarities.map((rarity) => (
@@ -212,6 +225,21 @@ export default function CardCollection({
 									</option>
 								))}
 							</select>
+							<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+								<svg
+									className='h-5 w-5 text-purple-600'
+									fill='none'
+									stroke='currentColor'
+									viewBox='0 0 24 24'
+								>
+									<path
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										strokeWidth={2}
+										d='M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z'
+									/>
+								</svg>
+							</div>
 							<div className='absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none'>
 								<svg
 									className='h-5 w-5 text-gray-400'
@@ -237,7 +265,7 @@ export default function CardCollection({
 									setSelectedRarity('');
 									setSearch('');
 								}}
-								className='px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-xl hover:bg-white/90 dark:hover:bg-gray-700/90 transition-all whitespace-nowrap shadow-lg hover:shadow-xl hover:scale-105'
+								className='px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all whitespace-nowrap shadow-md hover:shadow-lg'
 							>
 								Clear Filters
 							</button>
@@ -249,8 +277,8 @@ export default function CardCollection({
 				{isLoading && (
 					<div className='flex justify-center items-center py-20'>
 						<div className='relative'>
-							<div className='animate-spin rounded-full h-16 w-16 border-4 border-indigo-200 dark:border-indigo-900'></div>
-							<div className='animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-600 dark:border-indigo-400 absolute top-0 left-0'></div>
+							<div className='animate-spin rounded-full h-16 w-16 border-4 border-purple-200'></div>
+							<div className='animate-spin rounded-full h-16 w-16 border-t-4 border-purple-600 absolute top-0 left-0'></div>
 						</div>
 					</div>
 				)}
@@ -258,7 +286,7 @@ export default function CardCollection({
 				{/* Cards Grid */}
 				{!isLoading && data && (
 					<>
-						<div className='mb-6 text-sm text-gray-600 dark:text-gray-400'>
+						<div className='mb-6 text-sm text-gray-600'>
 							Showing {data.data.length} of {data.total} cards
 						</div>
 						<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6'>
@@ -277,7 +305,7 @@ export default function CardCollection({
 								<button
 									onClick={() => handlePageChange(page - 1)}
 									disabled={page === 1}
-									className='px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+									className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
 								>
 									Previous
 								</button>
@@ -303,8 +331,8 @@ export default function CardCollection({
 													onClick={() => handlePageChange(pageNum)}
 													className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
 														page === pageNum
-															? 'bg-indigo-600 text-white'
-															: 'text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+															? 'bg-purple-600 text-white'
+															: 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
 													}`}
 												>
 													{pageNum}
@@ -317,7 +345,7 @@ export default function CardCollection({
 								<button
 									onClick={() => handlePageChange(page + 1)}
 									disabled={page === totalPages}
-									className='px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+									className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
 								>
 									Next
 								</button>
@@ -326,7 +354,7 @@ export default function CardCollection({
 
 						{/* Page Info */}
 						{totalPages > 1 && (
-							<div className='mt-4 text-center text-sm text-gray-600 dark:text-gray-400'>
+							<div className='mt-4 text-center text-sm text-gray-600'>
 								Page {page} of {totalPages}
 							</div>
 						)}
@@ -336,7 +364,7 @@ export default function CardCollection({
 				{/* Empty State */}
 				{!isLoading && data && data.data.length === 0 && (
 					<div className='text-center py-20'>
-						<p className='text-gray-600 dark:text-gray-400 text-lg'>
+						<p className='text-gray-600 text-lg'>
 							No cards found. Try adjusting your search.
 						</p>
 					</div>
