@@ -35,7 +35,7 @@ export async function fetchCards({
 	if (rarity) params.set('rarity', rarity);
 	if (set) params.set('set', set);
 
-	const res = await fetch(`http://localhost:3000/cards?${params.toString()}`);
+	const res = await fetch(`http://localhost:4000/cards?${params.toString()}`);
 
 	if (!res.ok) {
 		throw new Error('Failed to fetch cards');
