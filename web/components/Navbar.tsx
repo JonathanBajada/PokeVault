@@ -45,9 +45,9 @@ export default function Navbar() {
 										x2='24'
 										y2='24'
 									>
-										<stop offset='0%' stopColor='#F5E6A8' />
-										<stop offset='50%' stopColor='#E6C86E' />
-										<stop offset='100%' stopColor='#B8943E' />
+										<stop offset='0%' stopColor='#e0d29a' />
+										<stop offset='50%' stopColor='#c7b377' />
+										<stop offset='100%' stopColor='#b5a467' />
 									</linearGradient>
 								</defs>
 								<rect
