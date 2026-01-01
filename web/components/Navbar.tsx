@@ -121,8 +121,8 @@ export default function Navbar() {
 						</Link>
 						<div className='relative group'>
 							<button
-								onClick={() => alert('Coming Soon!')}
-								className='flex items-center gap-2 px-4 py-2 rounded-xl text-sm md:text-base font-medium transition-all duration-300 text-white/90 hover:text-white hover:bg-white/10 cursor-pointer opacity-75 hover:opacity-100'
+								disabled
+								className='flex items-center gap-2 px-4 py-2 rounded-xl text-sm md:text-base font-medium transition-all duration-300 text-white/90 opacity-75 cursor-not-allowed'
 							>
 								<svg
 									width='20'
@@ -424,11 +424,8 @@ export default function Navbar() {
 								Pokedex
 							</Link>
 							<button
-								onClick={() => {
-									setMobileMenuOpen(false);
-									alert('Coming Soon!');
-								}}
-								className='w-full flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium transition-all duration-300 text-white/75 hover:bg-white/10 opacity-75'
+								disabled
+								className='w-full flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium transition-all duration-300 text-white/75 opacity-75 cursor-not-allowed'
 							>
 								<svg
 									width='20'
