@@ -9,6 +9,111 @@ interface CardProps {
 	isInBinder?: boolean;
 }
 
+function getRarityColors(rarity: string | null | undefined) {
+	if (!rarity) {
+		return {
+			bg: 'bg-slate-500/15',
+			text: 'text-slate-700',
+			border: 'border-slate-300/50',
+			banner: 'bg-slate-600/80',
+			shadow: 'shadow-[0_8px_30px_rgba(100,116,139,0.25)]',
+		};
+	}
+
+	const rarityLower = rarity.toLowerCase();
+
+	// Rare Holo variants (all share purple)
+	if (rarityLower.includes('rare holo') || rarityLower === 'rare ultra') {
+		return {
+			bg: 'bg-purple-500/20',
+			text: 'text-purple-700',
+			border: 'border-purple-300/50',
+			banner: 'bg-purple-600/80',
+			shadow: 'shadow-[0_8px_30px_rgba(168,85,247,0.25)]',
+		};
+	}
+
+	// Specific rarity mappings
+	if (rarityLower === 'common') {
+		return {
+			bg: 'bg-slate-500/15',
+			text: 'text-slate-700',
+			border: 'border-slate-300/50',
+			banner: 'bg-slate-600/80',
+			shadow: 'shadow-[0_8px_30px_rgba(100,116,139,0.25)]',
+		};
+	}
+
+	if (rarityLower === 'uncommon') {
+		return {
+			bg: 'bg-emerald-500/15',
+			text: 'text-emerald-700',
+			border: 'border-emerald-300/50',
+			banner: 'bg-emerald-600/80',
+			shadow: 'shadow-[0_8px_30px_rgba(16,185,129,0.25)]',
+		};
+	}
+
+	if (rarityLower === 'promo') {
+		return {
+			bg: 'bg-orange-500/15',
+			text: 'text-orange-700',
+			border: 'border-orange-300/50',
+			banner: 'bg-orange-600/80',
+			shadow: 'shadow-[0_8px_30px_rgba(251,146,60,0.25)]',
+		};
+	}
+
+	if (rarityLower === 'rare') {
+		return {
+			bg: 'bg-blue-500/15',
+			text: 'text-blue-700',
+			border: 'border-blue-300/50',
+			banner: 'bg-blue-600/80',
+			shadow: 'shadow-[0_8px_30px_rgba(37,99,235,0.25)]',
+		};
+	}
+
+	if (rarityLower === 'rare break') {
+		return {
+			bg: 'bg-amber-500/20',
+			text: 'text-amber-800',
+			border: 'border-amber-300/60',
+			banner: 'bg-amber-600/80',
+			shadow: 'shadow-[0_8px_30px_rgba(245,158,11,0.25)]',
+		};
+	}
+
+	if (rarityLower === 'rare prism star') {
+		return {
+			bg: 'bg-cyan-500/15',
+			text: 'text-cyan-700',
+			border: 'border-cyan-300/50',
+			banner: 'bg-cyan-600/80',
+			shadow: 'shadow-[0_8px_30px_rgba(6,182,212,0.25)]',
+		};
+	}
+
+	if (rarityLower === 'rare shiny') {
+		return {
+			bg: 'bg-teal-500/15',
+			text: 'text-teal-700',
+			border: 'border-teal-300/50',
+			banner: 'bg-teal-600/80',
+			shadow: 'shadow-[0_8px_30px_rgba(20,184,166,0.25)]',
+		};
+	}
+
+	// Default fallback
+	return {
+		bg: 'bg-slate-500/15',
+		text: 'text-slate-700',
+		border: 'border-slate-300/50',
+		banner: 'bg-slate-600/80',
+		shadow: 'shadow-[0_8px_30px_rgba(100,116,139,0.25)]',
+	};
+}
+
 export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 	const [added, setAdded] = useState(isInBinder);
 
@@ -17,18 +122,14 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 		setAdded(!added);
 	};
 
-	const isHolo = card.rarity?.includes('Holo');
-
-	const rarityBannerColor = isHolo ? 'bg-purple-600/80' : 'bg-blue-600/80';
-
-	const borderStyle = isHolo
-		? 'border border-purple-600/70 shadow-[0_8px_30px_rgba(168,85,247,0.25)]'
-		: 'border border-blue-600/70 shadow-[0_8px_30px_rgba(37,99,235,0.25)]';
+	const rarityColors = getRarityColors(card.rarity);
+	const borderStyle = `border ${rarityColors.border} ${rarityColors.shadow}`;
+	const rarityBannerColor = rarityColors.banner;
 
 	return (
 		<div
 			className={`relative rounded-2xl ${borderStyle}
-				group cursor-pointer transition-shadow duration-200 ease-out
+				group cursor-pointer transition-all duration-200 ease-out
 				group-hover:-translate-y-1
 				group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]`}
 			onClick={onClick}
@@ -90,11 +191,7 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 				<div className='pt-1'>
 					<span
 						className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
-							${
-								isHolo
-									? 'bg-purple-500/20 text-purple-700 border border-purple-300/50'
-									: 'bg-blue-500/20 text-blue-700 border border-blue-300/50'
-							}`}
+							${rarityColors.bg} ${rarityColors.text} border ${rarityColors.border}`}
 					>
 						{card.rarity || 'Unknown'}
 					</span>
