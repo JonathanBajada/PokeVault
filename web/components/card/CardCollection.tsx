@@ -195,12 +195,12 @@ export default function CardCollection({
 				)}
 
 				{/* Search and Filter Bar */}
-				<div className='mb-12'>
+				<div className='mb-9'>
 					<div className='filter-container flex flex-col gap-3 p-4'>
 						{/* Row 1: Primary Filters - Always on one line */}
 						<div className='flex flex-nowrap gap-3 overflow-x-auto'>
 							{/* Search Input */}
-							<div className='relative w-56 shrink-0'>
+							<div className='relative w-64 shrink-0'>
 								<input
 									type='text'
 									placeholder='Search cards by name...'
@@ -391,12 +391,12 @@ export default function CardCollection({
 						<div className='flex items-end gap-4 flex-wrap'>
 							{/* Price Range Slider */}
 							<div className='w-[65%]'>
-								<div className='mb-1.5'>
+								<div className='mb-1'>
 									<span
-										className='text-xs font-medium'
+										className='text-[10px] font-medium tracking-wide'
 										style={{ color: 'var(--text-secondary)' }}
 									>
-										Price {priceRange[0]} — {priceRange[1]}
+										Price · ${priceRange[0]} — ${priceRange[1]}
 									</span>
 								</div>
 								<div className='relative h-4'>
@@ -459,30 +459,41 @@ export default function CardCollection({
 							</div>
 
 							{/* Clear Filters Button */}
-							{(selectedSet ||
-								selectedRarity ||
-								search ||
-								selectedCardType ||
-								priceRange[0] > 0 ||
-								priceRange[1] < 500) && (
-								<button
-									onClick={() => {
-										setSelectedSet('');
-										setSelectedRarity('');
-										setSearch('');
-										setSelectedCardType('');
-										setPriceRange([0, 500]);
-									}}
-									className='filter-clear-btn px-4 py-3 text-sm font-medium rounded-xl transition-all whitespace-nowrap'
-									style={{
-										color: 'var(--text-secondary)',
-										background: 'rgba(255, 255, 255, 0.04)',
-										border: '1px solid rgba(255, 255, 255, 0.08)',
-									}}
-								>
-									Clear Filters
-								</button>
-							)}
+							<button
+								onClick={() => {
+									setSelectedSet('');
+									setSelectedRarity('');
+									setSearch('');
+									setSelectedCardType('');
+									setPriceRange([0, 500]);
+								}}
+								className='filter-clear-btn px-4 py-3 text-sm font-medium rounded-xl whitespace-nowrap transition-opacity duration-200 ease-in-out'
+								style={{
+									color: 'var(--text-secondary)',
+									background: 'rgba(255, 255, 255, 0.04)',
+									border: '1px solid rgba(255, 255, 255, 0.08)',
+									opacity:
+										selectedSet ||
+										selectedRarity ||
+										search ||
+										selectedCardType ||
+										priceRange[0] > 0 ||
+										priceRange[1] < 500
+											? 1
+											: 0,
+									pointerEvents:
+										selectedSet ||
+										selectedRarity ||
+										search ||
+										selectedCardType ||
+										priceRange[0] > 0 ||
+										priceRange[1] < 500
+											? 'auto'
+											: 'none',
+								}}
+							>
+								Clear Filters
+							</button>
 						</div>
 					</div>
 				</div>
