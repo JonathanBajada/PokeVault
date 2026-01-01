@@ -147,7 +147,7 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 			onClick={onClick}
 		>
 			{/* ================= FULL WIDTH IMAGE ================= */}
-			<div className='w-full bg-gradient-to-b from-gray-50 to-gray-100 relative overflow-hidden'>
+			<div className='w-full aspect-[5/7] bg-gradient-to-b from-gray-50 to-gray-100 relative overflow-hidden'>
 				{/* ================= TOP LEFT RARITY LABEL ================= */}
 				<div className='absolute top-2 left-2 z-20'>
 					<div
@@ -164,11 +164,11 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 					<img
 						src={card.image_small_url}
 						alt={card.name}
-						className='w-full h-auto object-cover'
+						className='w-full h-full object-cover'
 						loading='lazy'
 					/>
 				) : (
-					<div className='w-full aspect-square flex items-center justify-center bg-gray-200'>
+					<div className='w-full h-full flex items-center justify-center bg-gray-200'>
 						<div className='text-gray-400 text-sm'>No Image</div>
 					</div>
 				)}
