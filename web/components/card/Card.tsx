@@ -113,17 +113,12 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 						style={{ borderTop: '1px solid var(--border-default)' }}
 					>
 						<p className='card-meta-label mb-1'>PRICE</p>
-						<p
-							className='text-lg font-bold'
-							style={{ color: 'var(--text-primary)' }}
-						>
-							$24.99
-						</p>
+						<p className='card-price'>$24.99</p>
 					</div>
 				</div>
 
 				{/* Action Buttons */}
-				<div className='px-4 pb-4 flex gap-2 shrink-0'>
+				<div className='px-4 pt-3 pb-4 flex gap-2 shrink-0'>
 					{/* Favorite Button */}
 					<button
 						onClick={(e) => {
