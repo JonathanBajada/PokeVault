@@ -35,7 +35,7 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 
 	return (
 		<div
-			className={`card ${isHolo ? 'holo' : ''} cursor-pointer`}
+			className={`card ${isHolo ? 'holo' : ''} cursor-pointer group`}
 			onClick={onClick}
 		>
 			{/* ================= FULL WIDTH IMAGE ================= */}
@@ -73,6 +73,14 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 						</div>
 					</div>
 				)}
+
+				{/* Shiny hover effect */}
+				<div
+					className='absolute inset-0
+						bg-gradient-to-r from-transparent via-white/30 to-transparent
+						-translate-x-full group-hover:translate-x-full
+						transition-transform duration-1000 pointer-events-none z-10'
+				/>
 			</div>
 
 			{/* ================= CONTENT PANEL ================= */}
