@@ -148,7 +148,7 @@ export default function CardCollection({
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10'>
 				{/* Header */}
 				{showHeader && (
-					<div className='mb-8'>
+					<div className='mb-12'>
 						<h1
 							className='text-4xl md:text-5xl font-extrabold mb-3 drop-shadow-sm'
 							style={{
@@ -173,8 +173,8 @@ export default function CardCollection({
 				)}
 
 				{/* Search and Filter Bar */}
-				<div className='mb-10'>
-					<div className='flex flex-col sm:flex-row gap-4'>
+				<div className='mb-14'>
+					<div className='filter-container flex flex-col sm:flex-row gap-3 p-4'>
 						{/* Search Input */}
 						<div className='relative sm:w-64 flex-shrink-0'>
 							<input
@@ -182,10 +182,11 @@ export default function CardCollection({
 								placeholder='Search cards by name...'
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
-								className='filter-bar w-full px-4 py-3 pl-10 pr-4 rounded-lg focus:ring-2 focus:ring-white/20 outline-none transition-all'
+								className='filter-search-input w-full px-4 py-3 pl-10 pr-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/10 transition-all'
 								style={{
 									color: 'var(--text-primary)',
-									borderColor: 'var(--border-default)',
+									background: 'rgba(255, 255, 255, 0.08)',
+									border: '1px solid rgba(255, 255, 255, 0.08)',
 								}}
 							/>
 							<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
@@ -210,10 +211,11 @@ export default function CardCollection({
 							<select
 								value={selectedSet}
 								onChange={(e) => handleSetChange(e.target.value)}
-								className='filter-bar w-full px-4 py-3 pl-10 pr-10 rounded-lg focus:ring-2 focus:ring-white/20 outline-none transition-all appearance-none cursor-pointer'
+								className='filter-dropdown w-full px-4 py-3 pl-10 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/10 transition-all appearance-none cursor-pointer'
 								style={{
 									color: 'var(--text-primary)',
-									borderColor: 'var(--border-default)',
+									background: 'rgba(255, 255, 255, 0.04)',
+									border: '1px solid rgba(255, 255, 255, 0.08)',
 								}}
 							>
 								<option value=''>All Sets</option>
@@ -261,10 +263,11 @@ export default function CardCollection({
 							<select
 								value={selectedRarity}
 								onChange={(e) => handleRarityChange(e.target.value)}
-								className='filter-bar w-full px-4 py-3 pl-10 pr-10 rounded-lg focus:ring-2 focus:ring-white/20 outline-none transition-all appearance-none cursor-pointer'
+								className='filter-dropdown w-full px-4 py-3 pl-10 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/10 transition-all appearance-none cursor-pointer'
 								style={{
 									color: 'var(--text-primary)',
-									borderColor: 'var(--border-default)',
+									background: 'rgba(255, 255, 255, 0.04)',
+									border: '1px solid rgba(255, 255, 255, 0.08)',
 								}}
 							>
 								<option value=''>All Rarities</option>
@@ -315,10 +318,11 @@ export default function CardCollection({
 									setSelectedRarity('');
 									setSearch('');
 								}}
-								className='filter-bar px-4 py-3 text-sm font-medium rounded-lg transition-all whitespace-nowrap'
+								className='filter-clear-btn px-4 py-3 text-sm font-medium rounded-xl transition-all whitespace-nowrap'
 								style={{
 									color: 'var(--text-secondary)',
-									borderColor: 'var(--border-default)',
+									background: 'rgba(255, 255, 255, 0.04)',
+									border: '1px solid rgba(255, 255, 255, 0.08)',
 								}}
 							>
 								Clear Filters
@@ -347,7 +351,7 @@ export default function CardCollection({
 				{!isLoading && data && (
 					<div className='card-grid-zone'>
 						<div
-							className='mb-8 text-sm'
+							className='mb-10 text-sm'
 							style={{ color: 'var(--text-muted)' }}
 						>
 							Showing {data.data.length} of {data.total} cards
