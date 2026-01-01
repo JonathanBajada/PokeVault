@@ -1,0 +1,14 @@
+{
+	"sqltools.connections": [
+		{
+			"name": "PokeVault",
+			"driver": "PostgreSQL",
+			"server": "localhost",
+			"port": 5432,
+			"database": "pokevault",
+			"username": "postgres",
+			"password": "",
+			"connectionTimeout": 30000
+		}
+	]
+}
