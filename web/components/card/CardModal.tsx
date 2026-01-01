@@ -62,9 +62,9 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 
 				{/* Card Image */}
 				<div className='flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-8 md:p-12 min-h-[400px]'>
-					{card.image_small ? (
+					{card.image_small_url ? (
 						<img
-							src={card.image_small}
+							src={card.image_small_url}
 							alt={card.name}
 							className='max-w-full max-h-[70vh] object-contain drop-shadow-2xl'
 						/>
