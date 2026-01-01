@@ -9,7 +9,7 @@
 	/* ===============================
 	   BACKGROUNDS — Cold Vault
 	   =============================== */
-	--bg-page: #0a0f1c; /* colder, deeper */
+	--bg-page: #0b0f1d; /* colder, deeper */
 	--bg-surface: #0e1626;
 	--bg-surface-soft: rgba(14, 22, 38, 0.88);
 	--bg-elevated: #121a2e;
@@ -114,8 +114,8 @@ body {
 	position: relative;
 	background: linear-gradient(
 		180deg,
-		rgba(30, 41, 59, 1),
-		rgba(22, 30, 46, 1)
+		rgba(32, 43, 62, 1),
+		rgba(23, 32, 48, 1)
 	);
 	border-radius: 0.5rem;
 	border: 1px solid var(--border-default);
