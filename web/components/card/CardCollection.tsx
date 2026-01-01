@@ -316,7 +316,7 @@ export default function CardCollection({
 						{/* Row 1: Primary Filters - Always on one line */}
 						<div className='flex flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1'>
 							{/* Search Input */}
-							<div className='relative w-56 sm:w-64 shrink-0'>
+							<div className='relative flex-1 min-w-0'>
 								<input
 									type='text'
 									placeholder='Search cards by name...'
