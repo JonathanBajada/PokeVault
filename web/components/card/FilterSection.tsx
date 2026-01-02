@@ -158,9 +158,9 @@ export default function FilterSection({
 
 			{/* Desktop Layout (≥769px) */}
 			<div className='hidden md:block'>
-				<div className='filter-container flex flex-col gap-3 p-3 sm:p-4'>
+				<div className='flex flex-col gap-3'>
 					{/* Row 1: Primary Filters - Always on one line */}
-					<div className='flex flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1'>
+					<div className='filter-container flex flex-nowrap gap-2 sm:gap-3 overflow-x-auto p-3 sm:p-4'>
 						{/* Search Input */}
 						<div className='relative flex-1 min-w-0'>
 							<input
@@ -308,9 +308,9 @@ export default function FilterSection({
 						</button>
 					</div>
 
-					{/* Row 2: Secondary Filters - Price Range Slider */}
+					{/* Row 2: Secondary Filters - Price Range Slider - COMMENTED OUT */}
+					{/* 
 					<div className='flex flex-col sm:flex-row items-stretch sm:items-end gap-3 sm:gap-4'>
-						{/* Price Range Slider */}
 						<div className='w-full sm:w-[65%]'>
 							<div className='mb-1'>
 								<span
@@ -378,7 +378,6 @@ export default function FilterSection({
 							</div>
 						</div>
 
-						{/* Clear Filters Button */}
 						<button
 							onClick={handleClearFilters}
 							className='filter-clear-btn px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium rounded-xl whitespace-nowrap transition-opacity duration-200 ease-in-out w-full sm:w-auto'
@@ -411,6 +410,7 @@ export default function FilterSection({
 							Clear Filters
 						</button>
 					</div>
+					*/}
 				</div>
 			</div>
 
