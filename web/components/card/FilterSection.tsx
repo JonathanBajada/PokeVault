@@ -8,6 +8,9 @@ import {
 	HiChevronDown,
 	HiStar,
 	HiTag,
+	HiArrowUp,
+	HiArrowDown,
+	HiArrowsUpDown,
 } from 'react-icons/hi2';
 
 interface FilterSectionProps {
@@ -21,6 +24,8 @@ interface FilterSectionProps {
 	handleCardTypeChange: (value: string) => void;
 	priceRange: [number, number];
 	handlePriceRangeChange: (value: [number, number]) => void;
+	priceSort: string;
+	handlePriceSortChange: (value: string) => void;
 	uniqueSets: string[];
 	uniqueRarities: string[];
 }
@@ -36,6 +41,8 @@ export default function FilterSection({
 	handleCardTypeChange,
 	priceRange,
 	handlePriceRangeChange,
+	priceSort,
+	handlePriceSortChange,
 	uniqueSets,
 	uniqueRarities,
 }: FilterSectionProps) {
@@ -45,6 +52,7 @@ export default function FilterSection({
 		rarity: selectedRarity,
 		type: selectedCardType,
 		price: priceRange,
+		sort: priceSort,
 	});
 
 	// Handle body scroll lock when mobile filter sheet opens/closes
@@ -66,6 +74,7 @@ export default function FilterSection({
 			rarity: selectedRarity,
 			type: selectedCardType,
 			price: priceRange,
+			sort: priceSort,
 		});
 		setMobileFiltersOpen(true);
 	};
@@ -76,7 +85,19 @@ export default function FilterSection({
 		handleRarityChange(tempFilters.rarity);
 		handleCardTypeChange(tempFilters.type);
 		handlePriceRangeChange(tempFilters.price);
+		handlePriceSortChange(tempFilters.sort);
 		setMobileFiltersOpen(false);
+	};
+
+	// Toggle price sort
+	const handleTogglePriceSort = () => {
+		if (priceSort === 'low-to-high') {
+			handlePriceSortChange('high-to-low');
+		} else if (priceSort === 'high-to-low') {
+			handlePriceSortChange('');
+		} else {
+			handlePriceSortChange('low-to-high');
+		}
 	};
 
 	// Clear filters
@@ -86,12 +107,14 @@ export default function FilterSection({
 			rarity: '',
 			type: '',
 			price: [0, 500] as [number, number],
+			sort: '',
 		};
 		setTempFilters(cleared);
 		handleSetChange(cleared.set);
 		handleRarityChange(cleared.rarity);
 		handleCardTypeChange(cleared.type);
 		handlePriceRangeChange(cleared.price);
+		handlePriceSortChange(cleared.sort);
 		setSearch('');
 	};
 
@@ -244,6 +267,45 @@ export default function FilterSection({
 								<HiChevronDown className='h-4 w-4 sm:h-5 sm:w-5 text-gray-400' />
 							</div>
 						</div>
+
+						{/* Price Sort Button */}
+						<button
+							onClick={handleTogglePriceSort}
+							className='filter-dropdown w-36 sm:w-44 shrink-0 px-3 sm:px-4 py-2.5 sm:py-3 pl-9 sm:pl-10 pr-3 sm:pr-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/10 transition-all text-sm sm:text-base flex items-center gap-2 relative'
+							style={{
+								color: priceSort
+									? 'var(--text-primary)'
+									: 'var(--text-secondary)',
+								background: priceSort
+									? 'rgba(255, 255, 255, 0.08)'
+									: 'rgba(255, 255, 255, 0.04)',
+								border: `1px solid ${
+									priceSort
+										? 'rgba(255, 255, 255, 0.15)'
+										: 'rgba(255, 255, 255, 0.08)'
+								}`,
+							}}
+						>
+							<div className='absolute inset-y-0 left-0 pl-2.5 sm:pl-3 flex items-center pointer-events-none'>
+								{priceSort === 'low-to-high' ? (
+									<HiArrowUp
+										className='h-4 w-4 sm:h-5 sm:w-5'
+										style={{ color: 'var(--text-muted)' }}
+									/>
+								) : priceSort === 'high-to-low' ? (
+									<HiArrowDown
+										className='h-4 w-4 sm:h-5 sm:w-5'
+										style={{ color: 'var(--text-muted)' }}
+									/>
+								) : (
+									<HiArrowsUpDown
+										className='h-4 w-4 sm:h-5 sm:w-5'
+										style={{ color: 'var(--text-muted)' }}
+									/>
+								)}
+							</div>
+							<span>Price</span>
+						</button>
 					</div>
 
 					{/* Row 2: Secondary Filters - Price Range Slider */}
@@ -330,7 +392,8 @@ export default function FilterSection({
 									search ||
 									selectedCardType ||
 									priceRange[0] > 0 ||
-									priceRange[1] < 500
+									priceRange[1] < 500 ||
+									priceSort
 										? 1
 										: 0,
 								pointerEvents:
@@ -339,7 +402,8 @@ export default function FilterSection({
 									search ||
 									selectedCardType ||
 									priceRange[0] > 0 ||
-									priceRange[1] < 500
+									priceRange[1] < 500 ||
+									priceSort
 										? 'auto'
 										: 'none',
 							}}
@@ -535,6 +599,64 @@ export default function FilterSection({
 												<HiChevronDown className='h-5 w-5 text-gray-400' />
 											</div>
 										</div>
+									</div>
+
+									{/* Price Sort Button */}
+									<div>
+										<label
+											className='block text-sm font-medium mb-2'
+											style={{ color: 'var(--text-secondary)' }}
+										>
+											Price
+										</label>
+										<button
+											onClick={() =>
+												setTempFilters({
+													...tempFilters,
+													sort:
+														tempFilters.sort === 'low-to-high'
+															? 'high-to-low'
+															: tempFilters.sort ===
+															  'high-to-low'
+															? ''
+															: 'low-to-high',
+												})
+											}
+											className='w-full px-4 py-3 pl-10 pr-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/10 transition-all text-base flex items-center gap-2 relative'
+											style={{
+												color: tempFilters.sort
+													? 'var(--text-primary)'
+													: 'var(--text-secondary)',
+												background: tempFilters.sort
+													? 'rgba(255, 255, 255, 0.08)'
+													: 'rgba(255, 255, 255, 0.04)',
+												border: `1px solid ${
+													tempFilters.sort
+														? 'rgba(255, 255, 255, 0.15)'
+														: 'rgba(255, 255, 255, 0.1)'
+												}`,
+											}}
+										>
+											<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+												{tempFilters.sort === 'low-to-high' ? (
+													<HiArrowUp
+														className='h-5 w-5'
+														style={{ color: 'var(--text-muted)' }}
+													/>
+												) : tempFilters.sort === 'high-to-low' ? (
+													<HiArrowDown
+														className='h-5 w-5'
+														style={{ color: 'var(--text-muted)' }}
+													/>
+												) : (
+													<HiArrowsUpDown
+														className='h-5 w-5'
+														style={{ color: 'var(--text-muted)' }}
+													/>
+												)}
+											</div>
+											<span>Price</span>
+										</button>
 									</div>
 
 									{/* Price Range Slider */}

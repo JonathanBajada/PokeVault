@@ -36,6 +36,7 @@ export default function CardCollection({
 	const [selectedRarity, setSelectedRarity] = useState<string>('');
 	const [selectedCardType, setSelectedCardType] = useState<string>('');
 	const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
+	const [priceSort, setPriceSort] = useState<string>('');
 	const [selectedCard, setSelectedCard] = useState<CardType | null>(null);
 
 	// Debounce search input
@@ -72,6 +73,12 @@ export default function CardCollection({
 		setPage(1);
 	};
 
+	// Reset page when price sort changes
+	const handlePriceSortChange = (sort: string) => {
+		setPriceSort(sort);
+		setPage(1);
+	};
+
 	const { data, isLoading, error } = useQuery({
 		queryKey: [
 			'cards',
@@ -82,6 +89,7 @@ export default function CardCollection({
 			selectedRarity,
 			selectedCardType,
 			priceRange,
+			priceSort,
 		],
 		queryFn: () =>
 			fetchCards({
@@ -93,6 +101,7 @@ export default function CardCollection({
 				cardType: selectedCardType || undefined,
 				minPrice: priceRange[0] > 0 ? String(priceRange[0]) : undefined,
 				maxPrice: priceRange[1] < 500 ? String(priceRange[1]) : undefined,
+				priceSort: priceSort || undefined,
 			}),
 	});
 
@@ -206,6 +215,8 @@ export default function CardCollection({
 					handleCardTypeChange={handleCardTypeChange}
 					priceRange={priceRange}
 					handlePriceRangeChange={handlePriceRangeChange}
+					priceSort={priceSort}
+					handlePriceSortChange={handlePriceSortChange}
 					uniqueSets={uniqueSets}
 					uniqueRarities={uniqueRarities}
 				/>
