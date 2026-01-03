@@ -201,6 +201,7 @@ export default function FilterSection({
 							<select
 								value={selectedSet}
 								onChange={(e) => handleSetChange(e.target.value)}
+								autoFocus
 								className='filter-dropdown w-full px-3 sm:px-4 py-2.5 sm:py-3 pl-9 sm:pl-10 pr-9 sm:pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/10 transition-all appearance-none cursor-pointer text-sm sm:text-base'
 								style={{
 									color: 'var(--text-primary)',
