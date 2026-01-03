@@ -221,6 +221,136 @@ body {
 	display: inline-block;
 }
 
+/* =========================================================
+   🎬 CYBERPUNK MICRO-ANIMATIONS
+   ========================================================= */
+
+/* ---------- Logo Idle Pulse Animation ---------- */
+@keyframes logoNeonPulse {
+	0%,
+	100% {
+		filter: drop-shadow(0 0 1px var(--vault-gold-faint))
+			drop-shadow(0 0 2px var(--vault-gold-faint));
+		opacity: 1;
+	}
+	50% {
+		filter: drop-shadow(0 0 2px var(--vault-gold-soft))
+			drop-shadow(0 0 4px var(--vault-gold-soft));
+		opacity: 0.98;
+	}
+}
+
+/* ---------- Logo Hover Surge Animation ---------- */
+@keyframes logoSignalSurge {
+	0% {
+		filter: drop-shadow(0 0 4px var(--vault-gold-soft))
+			drop-shadow(0 0 8px var(--vault-gold-soft));
+		opacity: 0.95;
+	}
+	50% {
+		filter: drop-shadow(0 0 8px var(--vault-gold))
+			drop-shadow(0 0 16px var(--vault-gold))
+			drop-shadow(0 0 24px var(--rarity-ultra));
+		opacity: 1;
+	}
+	100% {
+		filter: drop-shadow(0 0 4px var(--vault-gold-soft))
+			drop-shadow(0 0 8px var(--vault-gold-soft));
+		opacity: 0.95;
+	}
+}
+
+/* ---------- Logo Scanline Sweep (Hover) ---------- */
+@keyframes scanlineSweep {
+	0% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+	50% {
+		opacity: 0.3;
+	}
+	100% {
+		transform: translateY(100%);
+		opacity: 0;
+	}
+}
+
+/* ---------- Header Title Entry Animation ---------- */
+@keyframes titleFadeInRise {
+	0% {
+		opacity: 0;
+		transform: translateY(6px);
+		filter: drop-shadow(0 0 0px var(--vault-gold));
+	}
+	60% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+		filter: drop-shadow(0 0 8px var(--vault-gold-soft))
+			drop-shadow(0 0 16px var(--vault-gold-faint));
+	}
+}
+
+/* ---------- Apply Logo Animations ---------- */
+.navbar-logo {
+	position: relative;
+}
+
+.navbar-logo-icon {
+	position: relative;
+	z-index: 1;
+	animation: logoNeonPulse 8s ease-in-out infinite;
+}
+
+/* Logo scanline pseudo-element */
+.navbar-logo::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: 2px;
+	background: linear-gradient(
+		to bottom,
+		transparent 0%,
+		var(--vault-gold) 50%,
+		transparent 100%
+	);
+	opacity: 0;
+	pointer-events: none;
+	z-index: 2;
+	transform: translateY(-100%);
+}
+
+.navbar-logo:hover .navbar-logo-icon {
+	animation: logoSignalSurge 250ms ease-out;
+}
+
+.navbar-logo:hover::before {
+	animation: scanlineSweep 300ms ease-out;
+}
+
+/* ---------- Apply Header Title Animation ---------- */
+.page-header-title {
+	animation: titleFadeInRise 600ms ease-out;
+	animation-fill-mode: both;
+}
+
+/* ---------- Accessibility: Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+	.navbar-logo,
+	.navbar-logo:hover,
+	.page-header-title,
+	.navbar-logo::before {
+		animation: none !important;
+		transition: none !important;
+	}
+}
+
 /* ---------- Filter Container ---------- */
 .filter-container {
 	background: var(--filter-container-bg);

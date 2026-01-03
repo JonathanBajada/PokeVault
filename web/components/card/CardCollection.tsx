@@ -185,7 +185,7 @@ export default function CardCollection({
 				{showHeader && (
 					<div className='mb-16'>
 						<h1
-							className='font-brand text-4xl md:text-5xl mb-3 drop-shadow-sm'
+							className='page-header-title font-brand text-4xl md:text-5xl mb-3 drop-shadow-sm'
 							style={{
 								color: 'var(--vault-gold)',
 								letterSpacing: '0.3px',
