@@ -1,7 +1,7 @@
 'use client';
 
 import { Card as CardType, CardDetail, fetchCardById } from '@/lib/api/cards';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 interface CardModalProps {
@@ -11,20 +11,12 @@ interface CardModalProps {
 }
 
 export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
-	const [cardDetail, setCardDetail] = useState<CardDetail | null>(null);
-
 	// Fetch full card details when modal opens
-	const { data, isLoading, error } = useQuery({
+	const { data: cardDetail, isLoading, error } = useQuery({
 		queryKey: ['cardDetail', card?.id],
 		queryFn: () => fetchCardById(card!.id),
 		enabled: isOpen && !!card,
 	});
-
-	useEffect(() => {
-		if (data) {
-			setCardDetail(data);
-		}
-	}, [data]);
 
 	// Close on Escape key
 	useEffect(() => {
@@ -47,10 +39,7 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 
 	if (!isOpen || !card) return null;
 
-	const displayCard = cardDetail || card;
-	const rarityLower = displayCard.rarity?.toLowerCase() || '';
-	const isHolo =
-		rarityLower.includes('rare holo') || rarityLower.includes('holo');
+	const displayCard: CardDetail = cardDetail || card;
 
 	// Get rarity color category
 	const getRarityColorCategory = (): 'COMMON' | 'UNCOMMON' | 'RARE' => {
@@ -112,31 +101,31 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 						</span>
 					</button>
 
-					{/* Close Button */}
-					<button
-						onClick={onClose}
+				{/* Close Button */}
+				<button
+					onClick={onClose}
 						className='p-3 rounded-full transition-all hover:bg-white/10'
 						style={{
 							background: 'rgba(255, 255, 255, 0.1)',
 							backdropFilter: 'blur(10px)',
 						}}
-						aria-label='Close modal'
-					>
-						<svg
+					aria-label='Close modal'
+				>
+					<svg
 							className='w-6 h-6'
 							style={{ color: 'var(--text-primary)' }}
-							fill='none'
-							stroke='currentColor'
-							viewBox='0 0 24 24'
-						>
-							<path
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								strokeWidth={2}
-								d='M6 18L18 6M6 6l12 12'
-							/>
-						</svg>
-					</button>
+						fill='none'
+						stroke='currentColor'
+						viewBox='0 0 24 24'
+					>
+						<path
+							strokeLinecap='round'
+							strokeLinejoin='round'
+							strokeWidth={2}
+							d='M6 18L18 6M6 6l12 12'
+						/>
+					</svg>
+				</button>
 				</div>
 
 				{isLoading ? (
@@ -170,16 +159,16 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 									src={displayCard.image_large_url || displayCard.image_small_url}
 									alt={displayCard.name}
 									className='max-w-full max-h-[80vh] object-contain drop-shadow-2xl'
-								/>
-							) : (
+						/>
+					) : (
 								<div
 									style={{ color: 'var(--text-muted)' }}
 									className='text-lg'
 								>
-									No Image Available
-								</div>
-							)}
+							No Image Available
 						</div>
+					)}
+				</div>
 
 						{/* Right Side - Card Details */}
 						<div className='p-8 md:p-10 overflow-y-auto'>
@@ -190,7 +179,7 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 									style={{ color: 'var(--text-primary)' }}
 								>
 									{displayCard.name}
-								</h2>
+					</h2>
 								{displayCard.set_name && (
 									<p
 										className='text-lg mb-4'
@@ -250,7 +239,7 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 									</div>
 								)}
 								{displayCard.hp && (
-									<div>
+							<div>
 										<p
 											className='text-xs font-medium uppercase tracking-wide mb-2'
 											style={{ color: 'var(--text-muted)' }}
@@ -262,11 +251,11 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 											style={{ color: 'var(--text-primary)' }}
 										>
 											{displayCard.hp}
-										</p>
-									</div>
-								)}
+								</p>
+							</div>
+						)}
 								{displayCard.supertype && (
-									<div>
+							<div>
 										<p
 											className='text-xs font-medium uppercase tracking-wide mb-2'
 											style={{ color: 'var(--text-muted)' }}
@@ -293,7 +282,7 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 										Types
 									</p>
 									<div className='flex flex-wrap gap-2'>
-										{displayCard.types.map((type, idx) => (
+										{displayCard.types.map((type: string, idx: number) => (
 											<span
 												key={idx}
 												className='px-3 py-1 rounded-lg text-sm font-medium'
@@ -318,7 +307,7 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 									>
 										Abilities
 									</p>
-									{displayCard.abilities.map((ability, idx) => (
+									{displayCard.abilities.map((ability: { name: string; text: string; type?: string }, idx: number) => (
 										<div
 											key={idx}
 											className='mb-3 p-4 rounded-lg'
@@ -353,7 +342,7 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 									>
 										Attacks
 									</p>
-									{displayCard.attacks.map((attack, idx) => (
+									{displayCard.attacks.map((attack: { name: string; cost: string[]; damage?: string; text?: string; convertedEnergyCost?: number }, idx: number) => (
 										<div
 											key={idx}
 											className='mb-3 p-4 rounded-lg'
@@ -371,7 +360,7 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 												</p>
 												{attack.cost && attack.cost.length > 0 && (
 													<div className='flex gap-1'>
-														{attack.cost.map((energy, i) => (
+														{attack.cost.map((energy: string, i: number) => (
 															<span
 																key={i}
 																className='text-xs'
@@ -388,7 +377,7 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 														style={{ color: 'var(--text-primary)' }}
 													>
 														{attack.damage}
-													</span>
+								</span>
 												)}
 											</div>
 											{attack.text && (
@@ -417,7 +406,7 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 												>
 													Weaknesses
 												</p>
-												{displayCard.weaknesses.map((weakness, idx) => (
+												{displayCard.weaknesses.map((weakness: { type: string; value: string }, idx: number) => (
 													<p
 														key={idx}
 														className='text-sm'
@@ -437,7 +426,7 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 												>
 													Resistances
 												</p>
-												{displayCard.resistances.map((resistance, idx) => (
+												{displayCard.resistances.map((resistance: { type: string; value: string }, idx: number) => (
 													<p
 														key={idx}
 														className='text-sm'
@@ -461,7 +450,7 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 										Prices
 									</p>
 									<div className='space-y-2'>
-										{displayCard.prices.map((price, idx) => (
+										{displayCard.prices.map((price: { source: string; variant: string; low?: number; mid?: number; high?: number; market?: number; direct_low?: number; updated_at?: string }, idx: number) => (
 											<div
 												key={idx}
 												className='p-3 rounded-lg'
@@ -509,10 +498,10 @@ export default function CardModal({ card, isOpen, onClose }: CardModalProps) {
 									>
 										{displayCard.artist}
 									</p>
-								</div>
-							)}
-						</div>
+							</div>
+						)}
 					</div>
+				</div>
 				)}
 			</div>
 		</div>
