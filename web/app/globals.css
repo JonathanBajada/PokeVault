@@ -34,7 +34,9 @@
 	/* Rarity Colors */
 	--rarity-common: #8e8e93;
 	--rarity-uncommon: #6aa38b;
-	--rarity-rare: #7aa2ff;
+	--rarity-rare: #c7b377;
+	--rarity-rare-dark: #9e8a4f;
+	--rarity-rare-soft: rgba(199, 179, 119, 0.45);
 	--rarity-holo: #c7b377;
 	--rarity-ultra: #e0d29a;
 }
@@ -232,7 +234,8 @@ body {
 }
 
 /* ---------- IMAGE-ONLY FOIL SHIMMER ---------- */
-.card.holo .card-image-wrapper::after {
+.card.holo .card-image-wrapper::after,
+.holo .card-image-wrapper::after {
 	content: '';
 	position: absolute;
 	inset: -40%;
@@ -245,9 +248,11 @@ body {
 	transform: translateX(-60%) rotate(6deg);
 	opacity: 0;
 	pointer-events: none;
+	z-index: 5;
 }
 
-.card.holo:hover .card-image-wrapper::after {
+.card.holo:hover .card-image-wrapper::after,
+.holo:hover .card-image-wrapper::after {
 	animation: imageFoil 1.6s ease forwards;
 }
 
@@ -279,9 +284,13 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	border-top: 1px solid var(--border-default);
+}
+
+/* Default fallback if no data-rarity is set */
+.rarity-label-bar:not([data-rarity]) {
 	background: rgba(255, 255, 255, 0.03);
 	color: var(--text-muted);
-	border-top: 1px solid var(--border-default);
 }
 
 /* ---------- Rarity Badge ---------- */
@@ -305,7 +314,8 @@ body {
 	background: rgba(106, 163, 139, 0.7);
 }
 .rarity-rare {
-	background: rgba(122, 162, 255, 0.7);
+	background: linear-gradient(135deg, #e0d29a, #b5a467);
+	color: #0b0b0d;
 }
 .rarity-holo {
 	background: rgba(199, 179, 119, 0.75);
@@ -362,4 +372,42 @@ body {
 	background: transparent;
 	color: var(--text-muted);
 	border-radius: 0.75rem;
+}
+
+/* ---------- Card Rarity Backgrounds ---------- */
+.card-image-wrapper[data-rarity='COMMON'],
+.card-detail-image-bg[data-rarity='COMMON'] {
+	background: rgba(148, 163, 184, 0.18);
+}
+
+.card-image-wrapper[data-rarity='UNCOMMON'],
+.card-detail-image-bg[data-rarity='UNCOMMON'] {
+	background: rgba(34, 197, 94, 0.18);
+}
+
+.card-image-wrapper[data-rarity='RARE'],
+.card-detail-image-bg[data-rarity='RARE'] {
+	background: radial-gradient(
+		ellipse at center,
+		var(--rarity-rare-soft),
+		transparent 70%
+	);
+}
+
+/* ---------- Rarity Label Bar Backgrounds ---------- */
+.rarity-label-bar[data-rarity='COMMON'] {
+	background: rgba(148, 163, 184, 0.18) !important;
+	color: #cbd5e1 !important;
+}
+
+.rarity-label-bar[data-rarity='UNCOMMON'] {
+	background: rgba(34, 197, 94, 0.18) !important;
+	color: #86efac !important;
+}
+
+.rarity-label-bar[data-rarity='RARE'] {
+	background: linear-gradient(180deg, #d1c07a, #b5a467) !important;
+	color: #0b0b0d !important;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+		inset 0 -1px 0 rgba(0, 0, 0, 0.35) !important;
 }
