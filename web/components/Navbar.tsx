@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import {
 	HiShoppingBag,
-	HiDevicePhoneMobile,
 	HiBookOpen,
 	HiBars3,
 	HiXMark,
@@ -99,7 +98,42 @@ export default function Navbar() {
 								isActive('/') ? 'navbar-link-active' : ''
 							}`}
 						>
-							<HiDevicePhoneMobile className='w-4 h-4 md:w-5 md:h-5' />
+							<svg
+								width='20'
+								height='20'
+								viewBox='0 0 24 24'
+								fill='none'
+								xmlns='http://www.w3.org/2000/svg'
+								className='w-4 h-4 md:w-5 md:h-5'
+							>
+								{/* Pokedex device body */}
+								<path
+									d='M4 4C4 2.89543 4.89543 2 6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4Z'
+									stroke='currentColor'
+									strokeWidth='2'
+									strokeLinecap='round'
+									strokeLinejoin='round'
+								/>
+								{/* Screen area */}
+								<path
+									d='M6 6H18V14H6V6Z'
+									stroke='currentColor'
+									strokeWidth='2'
+									strokeLinecap='round'
+									strokeLinejoin='round'
+									fill='none'
+								/>
+								{/* Screen glow */}
+								<path
+									d='M7 7H17V13H7V7Z'
+									fill='currentColor'
+									opacity='0.2'
+								/>
+								{/* Buttons */}
+								<circle cx='9' cy='17' r='1' fill='currentColor' />
+								<circle cx='12' cy='17' r='1' fill='currentColor' />
+								<circle cx='15' cy='17' r='1' fill='currentColor' />
+							</svg>
 							Pokedex
 						</Link>
 						<Link
@@ -194,7 +228,38 @@ export default function Navbar() {
 									isActive('/') ? 'navbar-link-active' : ''
 								}`}
 							>
-								<HiDevicePhoneMobile className='w-5 h-5' />
+								<svg
+									width='20'
+									height='20'
+									viewBox='0 0 24 24'
+									fill='none'
+									xmlns='http://www.w3.org/2000/svg'
+									className='w-5 h-5'
+								>
+									<path
+										d='M4 4C4 2.89543 4.89543 2 6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4Z'
+										stroke='currentColor'
+										strokeWidth='2'
+										strokeLinecap='round'
+										strokeLinejoin='round'
+									/>
+									<path
+										d='M6 6H18V14H6V6Z'
+										stroke='currentColor'
+										strokeWidth='2'
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										fill='none'
+									/>
+									<path
+										d='M7 7H17V13H7V7Z'
+										fill='currentColor'
+										opacity='0.2'
+									/>
+									<circle cx='9' cy='17' r='1' fill='currentColor' />
+									<circle cx='12' cy='17' r='1' fill='currentColor' />
+									<circle cx='15' cy='17' r='1' fill='currentColor' />
+								</svg>
 								Pokedex
 							</Link>
 							<Link

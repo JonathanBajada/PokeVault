@@ -8,21 +8,33 @@
 
 /* ---------- Design Tokens ---------- */
 :root {
+	/* =============================
+	   BACKGROUNDS
+	============================= */
 	--bg-page: #07060d;
 	--bg-surface: #0c0b16;
 	--bg-surface-soft: rgba(12, 11, 22, 0.92);
 	--bg-elevated: #15132a;
 
+	/* =============================
+	   PRIMARY ACCENT (NEON CYAN)
+	============================= */
 	--vault-gold: #22d3ee;
 	--vault-gold-dark: #0891b2;
 	--vault-gold-soft: rgba(34, 211, 238, 0.35);
 	--vault-gold-faint: rgba(34, 211, 238, 0.18);
 
+	/* =============================
+	   TEXT
+	============================= */
 	--text-primary: #ecfeff;
 	--text-secondary: #bae6fd;
 	--text-muted: #67e8f9;
 	--text-inverse: #07060d;
 
+	/* =============================
+	   BORDERS & SHADOWS
+	============================= */
 	--border-default: rgba(255, 255, 255, 0.08);
 	--border-gold: rgba(34, 211, 238, 0.35);
 
@@ -30,49 +42,70 @@
 	--shadow-md: 0 26px 60px rgba(0, 0, 0, 0.8);
 	--shadow-lg: 0 48px 110px rgba(0, 0, 0, 0.9);
 
+	/* =============================
+	   RARITY COLORS
+	============================= */
 	--rarity-common: #94a3b8;
 	--rarity-uncommon: #22d3ee;
-	--rarity-rare: #e879f9;
+	--rarity-rare: #e879f9; /* Neon Magenta */
 	--rarity-rare-dark: #a855f7;
 	--rarity-rare-soft: rgba(232, 121, 249, 0.45);
 	--rarity-holo: #67e8f9;
 	--rarity-ultra: #f0abfc;
 
+	/* =============================
+	   RARITY BACKGROUNDS
+	============================= */
 	--rarity-common-bg: rgba(148, 163, 184, 0.14);
 	--rarity-uncommon-bg: rgba(34, 211, 238, 0.18);
+	--rarity-rare-bg: rgba(232, 121, 249, 0.18);
+
 	--rarity-common-badge: rgba(148, 163, 184, 0.7);
 	--rarity-uncommon-badge: rgba(34, 211, 238, 0.8);
-	--rarity-rare-bg: rgba(232, 121, 249, 0.18);
 	--rarity-holo-badge: rgba(103, 232, 249, 0.85);
 	--rarity-ultra-badge: rgba(240, 171, 252, 0.9);
 
+	/* =============================
+	   RARITY TEXT
+	============================= */
 	--rarity-common-text: #e5e7eb;
 	--rarity-uncommon-text: #cffafe;
 
+	/* =============================
+	   CARD BACKGROUNDS
+	============================= */
 	--card-bg-start: #15132a;
 	--card-bg-end: #0c0b16;
 
+	/* =============================
+	   NAVBAR
+	============================= */
 	--navbar-bg-start: rgba(10, 10, 26, 0.95);
 	--navbar-bg-end: rgba(14, 14, 32, 0.97);
 
+	--navbar-logo-text: var(--text-primary);
+	--navbar-logo-gradient-start: #f0abfc;
+	--navbar-logo-gradient-mid: #22d3ee;
+	--navbar-logo-gradient-end: #0891b2;
+
+	--navbar-link-text: var(--text-primary);
+	--navbar-link-text-muted: rgba(236, 254, 255, 0.85);
+	--navbar-link-bg-active: rgba(34, 211, 238, 0.25);
+	--navbar-link-bg-hover: rgba(34, 211, 238, 0.15);
+
+	--navbar-login-bg: rgba(255, 255, 255, 0.06);
+	--navbar-login-bg-hover: rgba(34, 211, 238, 0.18);
+	--navbar-login-border: rgba(255, 255, 255, 0.12);
+	--navbar-login-border-hover: rgba(34, 211, 238, 0.35);
+	--navbar-login-text: var(--text-primary);
+
+	--navbar-mobile-border: rgba(255, 255, 255, 0.1);
+
+	/* =============================
+	   FILTERS & SLIDERS
+	============================= */
 	--filter-container-bg: rgba(20, 18, 40, 0.75);
 	--slider-active-opacity: rgba(34, 211, 238, 0.6);
-
-	/* Navbar Specific */
-	--navbar-logo-text: var(--text-primary);
-	--navbar-logo-gradient-start: var(--rarity-ultra);
-	--navbar-logo-gradient-mid: var(--vault-gold);
-	--navbar-logo-gradient-end: var(--vault-gold-dark);
-	--navbar-link-text: var(--text-primary);
-	--navbar-link-text-muted: rgba(255, 255, 255, 0.9);
-	--navbar-link-bg-active: rgba(255, 255, 255, 0.2);
-	--navbar-link-bg-hover: rgba(255, 255, 255, 0.1);
-	--navbar-login-bg: rgba(255, 255, 255, 0.06);
-	--navbar-login-bg-hover: rgba(255, 255, 255, 0.12);
-	--navbar-login-border: rgba(255, 255, 255, 0.12);
-	--navbar-login-border-hover: rgba(255, 255, 255, 0.2);
-	--navbar-login-text: var(--text-primary);
-	--navbar-mobile-border: rgba(255, 255, 255, 0.1);
 }
 
 /* ---------- Base ---------- */
