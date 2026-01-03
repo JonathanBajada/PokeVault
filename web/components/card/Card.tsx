@@ -59,10 +59,7 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 			onClick={onClick}
 		>
 			{/* ================= FULL WIDTH IMAGE ================= */}
-			<div
-				className="card-image-wrapper"
-				data-rarity={rarityColorCategory}
-			>
+			<div className='card-image-wrapper' data-rarity={rarityColorCategory}>
 				{card.image_small_url ? (
 					<img src={card.image_small_url} alt={card.name} loading='lazy' />
 				) : (
@@ -89,10 +86,7 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 			</div>
 
 			{/* ================= RARITY LABEL BAR ================= */}
-			<div
-				className="rarity-label-bar"
-				data-rarity={rarityColorCategory}
-			>
+			<div className='rarity-label-bar' data-rarity={rarityColorCategory}>
 				{rarityLabel}
 			</div>
 

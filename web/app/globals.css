@@ -122,15 +122,15 @@ body {
 	letter-spacing: 0.5px;
 }
 
-.navbar-logo svg defs stop[offset='0%'] {
+.navbar-logo-icon defs stop[offset='0%'] {
 	stop-color: var(--navbar-logo-gradient-start);
 }
 
-.navbar-logo svg defs stop[offset='50%'] {
+.navbar-logo-icon defs stop[offset='50%'] {
 	stop-color: var(--navbar-logo-gradient-mid);
 }
 
-.navbar-logo svg defs stop[offset='100%'] {
+.navbar-logo-icon defs stop[offset='100%'] {
 	stop-color: var(--navbar-logo-gradient-end);
 }
 

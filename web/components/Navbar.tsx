@@ -3,6 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import {
+	HiShoppingBag,
+	HiDevicePhoneMobile,
+	HiBookOpen,
+	HiBars3,
+	HiXMark,
+	HiArrowRight,
+} from 'react-icons/hi2';
 
 export default function Navbar() {
 	const pathname = usePathname();
@@ -24,45 +32,47 @@ export default function Navbar() {
 							href='/'
 							className='navbar-logo flex items-center gap-2 text-xl md:text-2xl font-brand hover:opacity-80 transition-opacity'
 						>
-							<svg
-								width='24'
-								height='24'
-								viewBox='0 0 24 24'
-								fill='none'
-								xmlns='http://www.w3.org/2000/svg'
-								className='w-6 h-6 md:w-7 md:h-7'
-							>
-								<defs>
-									<linearGradient
-										id='goldGradient'
-										x1='0'
-										y1='0'
-										x2='24'
-										y2='24'
-									>
-										<stop offset='0%' />
-										<stop offset='50%' />
-										<stop offset='100%' />
-									</linearGradient>
-								</defs>
-								<rect
-									x='2.5'
-									y='2.5'
-									width='19'
-									height='19'
-									rx='5'
-									stroke='url(#goldGradient)'
-									strokeWidth='1.5'
-								/>
-								<path
-									d='M8 16V8H11.5C13 8 14 9 14 10.5C14 12 13 13 11.5 13H9.5V16H8Z'
-									fill='url(#goldGradient)'
-								/>
-								<path
-									d='M15.5 8H17L14.5 16H13L15.5 8Z'
-									fill='url(#goldGradient)'
-								/>
-							</svg>
+							<div className='w-6 h-6 md:w-7 md:h-7 relative'>
+								<svg
+									width='100%'
+									height='100%'
+									viewBox='0 0 24 24'
+									fill='none'
+									xmlns='http://www.w3.org/2000/svg'
+									className='navbar-logo-icon'
+								>
+									<defs>
+										<linearGradient
+											id='goldGradient'
+											x1='0'
+											y1='0'
+											x2='24'
+											y2='24'
+										>
+											<stop offset='0%' />
+											<stop offset='50%' />
+											<stop offset='100%' />
+										</linearGradient>
+									</defs>
+									<rect
+										x='2.5'
+										y='2.5'
+										width='19'
+										height='19'
+										rx='5'
+										stroke='url(#goldGradient)'
+										strokeWidth='1.5'
+									/>
+									<path
+										d='M8 16V8H11.5C13 8 14 9 14 10.5C14 12 13 13 11.5 13H9.5V16H8Z'
+										fill='url(#goldGradient)'
+									/>
+									<path
+										d='M15.5 8H17L14.5 16H13L15.5 8Z'
+										fill='url(#goldGradient)'
+									/>
+								</svg>
+							</div>
 							Poke Vault
 						</Link>
 					</div>
@@ -73,37 +83,7 @@ export default function Navbar() {
 								disabled
 								className='navbar-link flex items-center gap-2 px-4 py-2 rounded-xl text-sm md:text-base font-medium opacity-75 cursor-not-allowed'
 							>
-								<svg
-									width='20'
-									height='20'
-									viewBox='0 0 24 24'
-									fill='none'
-									xmlns='http://www.w3.org/2000/svg'
-									className='w-4 h-4 md:w-5 md:h-5'
-								>
-									{/* Shopping bag */}
-									<path
-										d='M6 2L3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6L18 2H6Z'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-									/>
-									<path
-										d='M3 6H21'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-									/>
-									<path
-										d='M16 10C16 12.2091 14.2091 14 12 14C9.79086 14 8 12.2091 8 10'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-									/>
-								</svg>
+								<HiShoppingBag className='w-4 h-4 md:w-5 md:h-5' />
 								Marketplace
 								<span className='text-xs opacity-75'>Soon</span>
 							</button>
@@ -119,42 +99,7 @@ export default function Navbar() {
 								isActive('/') ? 'navbar-link-active' : ''
 							}`}
 						>
-							<svg
-								width='20'
-								height='20'
-								viewBox='0 0 24 24'
-								fill='none'
-								xmlns='http://www.w3.org/2000/svg'
-								className='w-4 h-4 md:w-5 md:h-5'
-							>
-								{/* Pokedex device body */}
-								<path
-									d='M4 4C4 2.89543 4.89543 2 6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4Z'
-									stroke='currentColor'
-									strokeWidth='2'
-									strokeLinecap='round'
-									strokeLinejoin='round'
-								/>
-								{/* Screen area */}
-								<path
-									d='M6 6H18V14H6V6Z'
-									stroke='currentColor'
-									strokeWidth='2'
-									strokeLinecap='round'
-									strokeLinejoin='round'
-									fill='none'
-								/>
-								{/* Screen glow */}
-								<path
-									d='M7 7H17V13H7V7Z'
-									fill='currentColor'
-									opacity='0.2'
-								/>
-								{/* Buttons */}
-								<circle cx='9' cy='17' r='1' fill='currentColor' />
-								<circle cx='12' cy='17' r='1' fill='currentColor' />
-								<circle cx='15' cy='17' r='1' fill='currentColor' />
-							</svg>
+							<HiDevicePhoneMobile className='w-4 h-4 md:w-5 md:h-5' />
 							Pokedex
 						</Link>
 						<Link
@@ -163,68 +108,7 @@ export default function Navbar() {
 								isActive('/binder') ? 'navbar-link-active' : ''
 							}`}
 						>
-							<svg
-								width='20'
-								height='20'
-								viewBox='0 0 24 24'
-								fill='none'
-								xmlns='http://www.w3.org/2000/svg'
-								className='w-4 h-4 md:w-5 md:h-5'
-							>
-								{/* Binder cover */}
-								<path
-									d='M7 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3Z'
-									stroke='currentColor'
-									strokeWidth='2'
-									strokeLinecap='round'
-									strokeLinejoin='round'
-								/>
-								{/* Binding rings */}
-								<circle cx='7' cy='8' r='1.5' fill='currentColor' />
-								<circle cx='7' cy='12' r='1.5' fill='currentColor' />
-								<circle cx='7' cy='16' r='1.5' fill='currentColor' />
-								{/* Ring arcs */}
-								<path
-									d='M5.5 8C5.5 7.17157 6.17157 6.5 7 6.5C7.82843 6.5 8.5 7.17157 8.5 8V8'
-									stroke='currentColor'
-									strokeWidth='1.5'
-									strokeLinecap='round'
-								/>
-								<path
-									d='M5.5 12C5.5 11.1716 6.17157 10.5 7 10.5C7.82843 10.5 8.5 11.1716 8.5 12V12'
-									stroke='currentColor'
-									strokeWidth='1.5'
-									strokeLinecap='round'
-								/>
-								<path
-									d='M5.5 16C5.5 15.1716 6.17157 14.5 7 14.5C7.82843 14.5 8.5 15.1716 8.5 16V16'
-									stroke='currentColor'
-									strokeWidth='1.5'
-									strokeLinecap='round'
-								/>
-								{/* Page lines */}
-								<path
-									d='M10 8H18'
-									stroke='currentColor'
-									strokeWidth='1.5'
-									strokeLinecap='round'
-									opacity='0.7'
-								/>
-								<path
-									d='M10 12H18'
-									stroke='currentColor'
-									strokeWidth='1.5'
-									strokeLinecap='round'
-									opacity='0.7'
-								/>
-								<path
-									d='M10 16H18'
-									stroke='currentColor'
-									strokeWidth='1.5'
-									strokeLinecap='round'
-									opacity='0.7'
-								/>
-							</svg>
+							<HiBookOpen className='w-4 h-4 md:w-5 md:h-5' />
 							My Binder
 						</Link>
 						<Link
@@ -248,7 +132,7 @@ export default function Navbar() {
 							}}
 						>
 							<span>Login</span>
-							<span className='login-arrow'>→</span>
+							<HiArrowRight className='login-arrow w-4 h-4' />
 						</Link>
 					</div>
 
@@ -275,7 +159,7 @@ export default function Navbar() {
 							}}
 						>
 							<span>Login</span>
-							<span className='login-arrow'>→</span>
+							<HiArrowRight className='login-arrow w-4 h-4' />
 						</Link>
 						<button
 							onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -283,33 +167,9 @@ export default function Navbar() {
 							aria-label='Toggle menu'
 						>
 							{!mobileMenuOpen ? (
-								<svg
-									className='w-6 h-6'
-									fill='none'
-									stroke='currentColor'
-									viewBox='0 0 24 24'
-								>
-									<path
-										strokeLinecap='round'
-										strokeLinejoin='round'
-										strokeWidth={2}
-										d='M4 6h16M4 12h16M4 18h16'
-									/>
-								</svg>
+								<HiBars3 className='w-6 h-6' />
 							) : (
-								<svg
-									className='w-6 h-6'
-									fill='none'
-									stroke='currentColor'
-									viewBox='0 0 24 24'
-								>
-									<path
-										strokeLinecap='round'
-										strokeLinejoin='round'
-										strokeWidth={2}
-										d='M6 18L18 6M6 6l12 12'
-									/>
-								</svg>
+								<HiXMark className='w-6 h-6' />
 							)}
 						</button>
 					</div>
@@ -323,36 +183,7 @@ export default function Navbar() {
 								disabled
 								className='navbar-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium opacity-75 cursor-not-allowed'
 							>
-								<svg
-									width='20'
-									height='20'
-									viewBox='0 0 24 24'
-									fill='none'
-									xmlns='http://www.w3.org/2000/svg'
-									className='w-5 h-5'
-								>
-									<path
-										d='M6 2L3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6L18 2H6Z'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-									/>
-									<path
-										d='M3 6H21'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-									/>
-									<path
-										d='M16 10C16 12.2091 14.2091 14 12 14C9.79086 14 8 12.2091 8 10'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-									/>
-								</svg>
+								<HiShoppingBag className='w-5 h-5' />
 								Marketplace
 								<span className='text-xs opacity-75 ml-auto'>Soon</span>
 							</button>
@@ -363,38 +194,7 @@ export default function Navbar() {
 									isActive('/') ? 'navbar-link-active' : ''
 								}`}
 							>
-								<svg
-									width='20'
-									height='20'
-									viewBox='0 0 24 24'
-									fill='none'
-									xmlns='http://www.w3.org/2000/svg'
-									className='w-5 h-5'
-								>
-									<path
-										d='M4 4C4 2.89543 4.89543 2 6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4Z'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-									/>
-									<path
-										d='M6 6H18V14H6V6Z'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-										fill='none'
-									/>
-									<path
-										d='M7 7H17V13H7V7Z'
-										fill='currentColor'
-										opacity='0.2'
-									/>
-									<circle cx='9' cy='17' r='1' fill='currentColor' />
-									<circle cx='12' cy='17' r='1' fill='currentColor' />
-									<circle cx='15' cy='17' r='1' fill='currentColor' />
-								</svg>
+								<HiDevicePhoneMobile className='w-5 h-5' />
 								Pokedex
 							</Link>
 							<Link
@@ -404,64 +204,7 @@ export default function Navbar() {
 									isActive('/binder') ? 'navbar-link-active' : ''
 								}`}
 							>
-								<svg
-									width='20'
-									height='20'
-									viewBox='0 0 24 24'
-									fill='none'
-									xmlns='http://www.w3.org/2000/svg'
-									className='w-5 h-5'
-								>
-									<path
-										d='M7 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3Z'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-									/>
-									<circle cx='7' cy='8' r='1.5' fill='currentColor' />
-									<circle cx='7' cy='12' r='1.5' fill='currentColor' />
-									<circle cx='7' cy='16' r='1.5' fill='currentColor' />
-									<path
-										d='M5.5 8C5.5 7.17157 6.17157 6.5 7 6.5C7.82843 6.5 8.5 7.17157 8.5 8V8'
-										stroke='currentColor'
-										strokeWidth='1.5'
-										strokeLinecap='round'
-									/>
-									<path
-										d='M5.5 12C5.5 11.1716 6.17157 10.5 7 10.5C7.82843 10.5 8.5 11.1716 8.5 12V12'
-										stroke='currentColor'
-										strokeWidth='1.5'
-										strokeLinecap='round'
-									/>
-									<path
-										d='M5.5 16C5.5 15.1716 6.17157 14.5 7 14.5C7.82843 14.5 8.5 15.1716 8.5 16V16'
-										stroke='currentColor'
-										strokeWidth='1.5'
-										strokeLinecap='round'
-									/>
-									<path
-										d='M10 8H18'
-										stroke='currentColor'
-										strokeWidth='1.5'
-										strokeLinecap='round'
-										opacity='0.7'
-									/>
-									<path
-										d='M10 12H18'
-										stroke='currentColor'
-										strokeWidth='1.5'
-										strokeLinecap='round'
-										opacity='0.7'
-									/>
-									<path
-										d='M10 16H18'
-										stroke='currentColor'
-										strokeWidth='1.5'
-										strokeLinecap='round'
-										opacity='0.7'
-									/>
-								</svg>
+								<HiBookOpen className='w-5 h-5' />
 								My Binder
 							</Link>
 						</div>
