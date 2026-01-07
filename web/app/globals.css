@@ -141,8 +141,9 @@ body::after {
 	position: relative;
 	padding: 2rem;
 	border-radius: 1rem;
-	/* Semi-opaque black background - allows pixel image to show through slightly */
-	background: rgba(0, 0, 0, 0.95);
+	/* Match filter bar glossy background - using lighter shade for better visibility */
+	background: rgba(25, 20, 45, 0.8);
+	border: 1px solid var(--border-default);
 	/* backdrop-filter removed for performance */
 }
 
