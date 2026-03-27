@@ -173,12 +173,18 @@ export default function Navbar() {
 						</Link>
 						{session ? (
 							<div className='flex items-center gap-3'>
-								<span
-									className='text-sm font-medium'
-									style={{ color: 'var(--text-secondary)' }}
+								<Link
+									href='/profile'
+									title={session.user.username}
+									className='w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold font-brand hover:scale-105 transition-transform shrink-0'
+									style={{
+										background: 'linear-gradient(135deg, var(--vault-gold), var(--vault-gold-dark))',
+										color: 'var(--text-inverse)',
+										boxShadow: '0 2px 8px rgba(255,95,210,0.3)',
+									}}
 								>
-									{session.user.username}
-								</span>
+									{session.user.username.split(/\s+/).map((w: string) => w[0]).join('').toUpperCase().slice(0, 2)}
+								</Link>
 								<button
 									onClick={() => signOut({ callbackUrl: '/' })}
 									className='nav-login-premium flex items-center gap-1.5'

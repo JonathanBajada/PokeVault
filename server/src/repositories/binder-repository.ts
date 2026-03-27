@@ -22,6 +22,7 @@ export type BinderCard = {
 	image_large_url: string;
 	set_name: string;
 	rarity: string | null;
+	market_price: number | null;
 };
 
 /** Returns the user's binder, creating one if it doesn't exist yet. */
@@ -55,15 +56,22 @@ export async function getBinderCards(binderId: string): Promise<BinderCard[]> {
 			c.image_small AS image_small_url,
 			c.image_large AS image_large_url,
 			s.name AS set_name,
-			c.rarity
+			c.rarity,
+			COALESCE(MAX(p.market), MAX(p.mid), MAX(p.high)) AS market_price
 		FROM binder_cards bc
 		INNER JOIN cards c ON bc.card_id = c.id
 		INNER JOIN sets s ON c.set_id = s.id
+		LEFT JOIN prices p ON c.id = p.card_id
 		WHERE bc.binder_id = $1
+		GROUP BY bc.card_id, bc.quantity, bc.condition, bc.grade, bc.intent,
+		         bc.created_at, c.name, c.image_small, c.image_large, s.name, c.rarity
 		ORDER BY bc.created_at DESC`,
 		[binderId],
 	);
-	return result.rows;
+	return result.rows.map((row) => ({
+		...row,
+		market_price: row.market_price ? Number(row.market_price) : null,
+	}));
 }
 
 export async function addCardToBinder(
@@ -98,14 +106,53 @@ export async function addCardToBinder(
 			c.image_small AS image_small_url,
 			c.image_large AS image_large_url,
 			s.name AS set_name,
-			c.rarity
+			c.rarity,
+			COALESCE(MAX(p.market), MAX(p.mid), MAX(p.high)) AS market_price
 		FROM binder_cards bc
 		INNER JOIN cards c ON bc.card_id = c.id
 		INNER JOIN sets s ON c.set_id = s.id
-		WHERE bc.binder_id = $1 AND bc.card_id = $2`,
+		LEFT JOIN prices p ON c.id = p.card_id
+		WHERE bc.binder_id = $1 AND bc.card_id = $2
+		GROUP BY bc.card_id, bc.quantity, bc.condition, bc.grade, bc.intent,
+		         bc.created_at, c.name, c.image_small, c.image_large, s.name, c.rarity`,
 		[binderId, cardId],
 	);
-	return result.rows[0];
+	const row = result.rows[0];
+	return { ...row, market_price: row.market_price ? Number(row.market_price) : null };
+}
+
+export async function updateBinderCard(
+	binderId: string,
+	cardId: string,
+	quantity: number,
+	condition?: string,
+): Promise<BinderCard | null> {
+	const result = await pool.query(
+		`UPDATE binder_cards
+		 SET quantity = $1, condition = COALESCE($2, condition), updated_at = now()
+		 WHERE binder_id = $3 AND card_id = $4`,
+		[quantity, condition ?? null, binderId, cardId],
+	);
+	if ((result.rowCount ?? 0) === 0) return null;
+
+	const fetched = await pool.query<BinderCard>(
+		`SELECT
+			bc.card_id, bc.quantity, bc.condition, bc.grade, bc.intent,
+			bc.created_at AS added_at,
+			c.name, c.image_small AS image_small_url, c.image_large AS image_large_url,
+			s.name AS set_name, c.rarity,
+			COALESCE(MAX(p.market), MAX(p.mid), MAX(p.high)) AS market_price
+		FROM binder_cards bc
+		INNER JOIN cards c ON bc.card_id = c.id
+		INNER JOIN sets s ON c.set_id = s.id
+		LEFT JOIN prices p ON c.id = p.card_id
+		WHERE bc.binder_id = $1 AND bc.card_id = $2
+		GROUP BY bc.card_id, bc.quantity, bc.condition, bc.grade, bc.intent,
+		         bc.created_at, c.name, c.image_small, c.image_large, s.name, c.rarity`,
+		[binderId, cardId],
+	);
+	const row = fetched.rows[0];
+	return { ...row, market_price: row.market_price ? Number(row.market_price) : null };
 }
 
 export async function removeCardFromBinder(

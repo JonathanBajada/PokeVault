@@ -194,7 +194,7 @@ export default function SignupPage() {
 								className='w-full px-4 py-3 rounded-xl transition-all duration-200'
 								style={{
 									background: 'rgba(255, 255, 255, 0.05)',
-									border: '1px solid var(--border-default)',
+									border: `1px solid ${password.length > 0 && password.length < 8 ? 'rgba(239,68,68,0.6)' : 'var(--border-default)'}`,
 									color: 'var(--text-primary)',
 								}}
 								onFocus={(e) => {
@@ -204,17 +204,24 @@ export default function SignupPage() {
 								}}
 								onBlur={(e) => {
 									e.target.style.background = 'rgba(255, 255, 255, 0.05)';
-									e.target.style.borderColor = 'var(--border-default)';
+									e.target.style.borderColor = password.length > 0 && password.length < 8
+										? 'rgba(239,68,68,0.6)'
+										: 'var(--border-default)';
 									e.target.style.boxShadow = 'none';
 								}}
 								placeholder='At least 8 characters'
 							/>
+							{password.length > 0 && password.length < 8 && (
+								<p className='mt-1.5 text-xs' style={{ color: '#fca5a5' }}>
+									Password must be at least 8 characters ({8 - password.length} more needed)
+								</p>
+							)}
 						</div>
 
 						{/* Submit */}
 						<button
 							type='submit'
-							disabled={isLoading}
+							disabled={isLoading || password.length < 8}
 							className='w-full py-3 rounded-xl font-semibold text-base transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
 							style={{
 								background: isLoading

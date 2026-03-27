@@ -68,6 +68,34 @@ export async function updateUsername(
 	return result.rows[0] ?? null;
 }
 
+export async function updateUser(
+	id: string,
+	fields: { username?: string; email?: string },
+): Promise<User | null> {
+	const sets: string[] = [];
+	const values: unknown[] = [];
+	let i = 1;
+
+	if (fields.username !== undefined) {
+		sets.push(`username = $${i++}`);
+		values.push(fields.username.trim());
+	}
+	if (fields.email !== undefined) {
+		sets.push(`email = $${i++}`);
+		values.push(fields.email.toLowerCase());
+	}
+	if (sets.length === 0) return null;
+
+	sets.push(`updated_at = now()`);
+	values.push(id);
+
+	const result = await pool.query<User>(
+		`UPDATE users SET ${sets.join(', ')} WHERE id = $${i} RETURNING id, email, username, created_at, updated_at`,
+		values,
+	);
+	return result.rows[0] ?? null;
+}
+
 export async function deleteUser(id: string): Promise<boolean> {
 	const result = await pool.query(
 		`DELETE FROM users WHERE id = $1`,

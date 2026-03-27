@@ -607,9 +607,11 @@ body::after {
 	border-radius: 0.75rem;
 	padding: 0.6rem 1rem;
 	font-weight: 600;
-	transition: all 0.25s ease;
+	cursor: pointer;
+	transition: all 0.2s ease;
 }
 
+.btn-primary:hover,
 .card:hover .btn-primary {
 	background: linear-gradient(
 		135deg,
@@ -621,11 +623,29 @@ body::after {
 	box-shadow: 0 10px 22px var(--vault-gold-soft);
 }
 
+.btn-primary:active {
+	transform: scale(0.95);
+	box-shadow: none;
+}
+
 .btn-secondary {
 	border: 1px solid var(--border-default);
 	background: transparent;
 	color: var(--text-muted);
 	border-radius: 0.75rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+	background: rgba(255, 255, 255, 0.08);
+	border-color: var(--border-strong);
+	color: var(--text-primary);
+}
+
+.btn-secondary:active {
+	transform: scale(0.95);
+	background: rgba(255, 255, 255, 0.12);
 }
 
 /* ---------- Card Rarity Backgrounds ---------- */

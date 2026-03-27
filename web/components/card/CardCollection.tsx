@@ -10,7 +10,7 @@ import {
 	fetchCardTypes,
 	Card as CardType,
 } from '@/lib/api/cards';
-import { addCardToBinder, removeCardFromBinder, fetchBinder } from '@/lib/api/binder';
+import { addCardToBinder, removeCardFromBinder, updateBinderCard, fetchBinder } from '@/lib/api/binder';
 import Card from '@/components/card/Card';
 import CardModal from '@/components/card/CardModal';
 import FilterSection from '@/components/card/FilterSection';
@@ -134,7 +134,9 @@ export default function CardCollection({
 		enabled: !!session?.user.id,
 	});
 
-	const binderCardIds = new Set(binderData?.cards.map((c) => c.card_id) ?? []);
+	const binderEntryMap = new Map(
+		(binderData?.cards ?? []).map((c) => [c.card_id, { quantity: c.quantity, condition: c.condition }])
+	);
 
 	const uniqueSets = setsData || [];
 	const uniqueCardTypes = cardTypesData || [];
@@ -282,9 +284,13 @@ export default function CardCollection({
 										key={card.id}
 										card={card}
 										onClick={() => setSelectedCard(card)}
-										isInBinder={binderCardIds.has(card.id)}
-										onAddToBinder={session?.user.id ? async () => {
-											await addCardToBinder(session.user.id, card.id);
+										binderEntry={binderEntryMap.get(card.id) ?? null}
+										onAddToBinder={session?.user.id ? async (qty, cond) => {
+											await addCardToBinder(session.user.id, card.id, qty, cond);
+											queryClient.invalidateQueries({ queryKey: ['binder', session.user.id] });
+										} : undefined}
+										onUpdateBinder={session?.user.id ? async (qty, cond) => {
+											await updateBinderCard(session.user.id, card.id, qty, cond);
 											queryClient.invalidateQueries({ queryKey: ['binder', session.user.id] });
 										} : undefined}
 										onRemoveFromBinder={session?.user.id ? async () => {

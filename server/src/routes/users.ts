@@ -5,7 +5,7 @@ import {
 	deleteUser,
 	findUserByEmail,
 	findUserById,
-	updateUsername,
+	updateUser,
 	verifyPassword,
 } from '../repositories/user-repository';
 import {
@@ -13,7 +13,17 @@ import {
 	getBinderCards,
 	getOrCreateBinder,
 	removeCardFromBinder,
+	updateBinderCard,
 } from '../repositories/binder-repository';
+
+export const CONDITIONS = [
+	'Mint',
+	'Near Mint',
+	'Lightly Played',
+	'Moderately Played',
+	'Heavily Played',
+	'Damaged',
+] as const;
 
 const router = Router();
 
@@ -26,14 +36,24 @@ const registerSchema = z.object({
 });
 
 const updateSchema = z.object({
-	username: z.string().trim().min(1, 'Username must be a non-empty string'),
+	username: z.string().trim().min(1, 'Username must not be empty').optional(),
+	email: z.string().email('Invalid email').optional(),
+}).refine((d) => d.username !== undefined || d.email !== undefined, {
+	message: 'Provide at least username or email',
 });
+
+const CONDITION_VALUES = ['Mint', 'Near Mint', 'Lightly Played', 'Moderately Played', 'Heavily Played', 'Damaged'] as const;
 
 const addCardSchema = z.object({
 	cardId: z.string().min(1),
-	quantity: z.number().int().min(1).default(1),
-	condition: z.enum(['NM', 'LP', 'MP', 'HP', 'DMG']).optional(),
+	quantity: z.number().int().min(1).max(99).default(1),
+	condition: z.enum(CONDITION_VALUES).optional(),
 	intent: z.enum(['own', 'sell', 'trade', 'want']).optional(),
+});
+
+const updateCardSchema = z.object({
+	quantity: z.number().int().min(1).max(99).optional(),
+	condition: z.enum(CONDITION_VALUES).optional(),
 });
 
 // ─── Auth routes ───────────────────────────────────────────────────────────
@@ -109,11 +129,23 @@ router.patch('/:id', async (req: Request<{ id: string }>, res: Response) => {
 		});
 	}
 
-	const user = await updateUsername(req.params.id, parsed.data.username);
-	if (!user) {
-		return res.status(404).json({ error: 'User not found' });
+	try {
+		if (parsed.data.email) {
+			const existing = await findUserByEmail(parsed.data.email);
+			if (existing && existing.id !== req.params.id) {
+				return res.status(409).json({ error: 'Email already in use' });
+			}
+		}
+
+		const user = await updateUser(req.params.id, parsed.data);
+		if (!user) {
+			return res.status(404).json({ error: 'User not found' });
+		}
+		return res.status(200).json(user);
+	} catch (err) {
+		console.error('Update user error:', err);
+		return res.status(500).json({ error: 'Update failed' });
 	}
-	return res.status(200).json(user);
 });
 
 // DELETE /users/:id
@@ -164,6 +196,36 @@ router.post('/:id/cards', async (req: Request<{ id: string }>, res: Response) =>
 
 	return res.status(201).json(card);
 });
+
+// PATCH /users/:id/cards/:cardId
+router.patch(
+	'/:id/cards/:cardId',
+	async (req: Request<{ id: string; cardId: string }>, res: Response) => {
+		const user = await findUserById(req.params.id);
+		if (!user) return res.status(404).json({ error: 'User not found' });
+
+		const parsed = updateCardSchema.safeParse(req.body);
+		if (!parsed.success) {
+			return res.status(400).json({
+				error: parsed.error.issues[0]?.message ?? 'Invalid request body',
+			});
+		}
+
+		if (!parsed.data.quantity && !parsed.data.condition) {
+			return res.status(400).json({ error: 'Nothing to update' });
+		}
+
+		const binder = await getOrCreateBinder(user.id);
+		const updated = await updateBinderCard(
+			binder.id,
+			req.params.cardId,
+			parsed.data.quantity!,
+			parsed.data.condition,
+		);
+		if (!updated) return res.status(404).json({ error: 'Card not in binder' });
+		return res.status(200).json(updated);
+	},
+);
 
 // DELETE /users/:id/cards/:cardId
 router.delete(

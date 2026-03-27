@@ -26,21 +26,27 @@ export const authOptions: NextAuthOptions = {
 				if (!res.ok) return null;
 
 				const user = await res.json();
-				return { id: user.id, email: user.email, name: user.username };
+				return { id: user.id, email: user.email, name: user.username, createdAt: user.created_at };
 			},
 		}),
 	],
 	callbacks: {
-		jwt({ token, user }) {
+		jwt({ token, user, trigger, session }) {
+			if (trigger === 'update' && session) {
+				if (session.username) token.username = session.username;
+				if (session.email) token.email = session.email;
+			}
 			if (user) {
 				token.id = user.id;
 				token.username = user.name ?? '';
+				token.createdAt = (user as { createdAt?: string }).createdAt ?? '';
 			}
 			return token;
 		},
 		session({ session, token }) {
 			session.user.id = token.id;
 			session.user.username = token.username;
+			session.user.createdAt = token.createdAt;
 			return session;
 		},
 	},
