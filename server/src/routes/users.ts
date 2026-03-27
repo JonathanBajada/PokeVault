@@ -1,116 +1,148 @@
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
-import cards from './cards';
+import {
+	createUser,
+	deleteUser,
+	findUserByEmail,
+	findUserById,
+	updateUsername,
+	verifyPassword,
+} from '../repositories/user-repository';
+import {
+	addCardToBinder,
+	getBinderCards,
+	getOrCreateBinder,
+	removeCardFromBinder,
+} from '../repositories/binder-repository';
 
-type PriceSnapshot = {
-	low?: number;
-	mid?: number;
-	high?: number;
-	capturedAt: string; // ISO timestamp
-};
+const router = Router();
 
-type CollectedCard = {
-	cardId: string;
-	name: string;
-	imageUrl: string;
+// ─── Validation schemas ────────────────────────────────────────────────────
 
-	setName: string;
-	rarity?: string;
-
-	priceSnapshot?: PriceSnapshot;
-
-	quantity: number;
-	condition?: 'NM' | 'LP' | 'MP' | 'HP' | 'DMG';
-	addedAt: string; // ISO timestamp
-};
-
-export type User = {
-	id: number;
-	name: string;
-	cards: CollectedCard[];
-};
-
-// Temporary in-memory data (acts like a database for now)
-const users: User[] = [
-	{ id: 1, name: 'Alice', cards: [] },
-	{ id: 2, name: 'Bob', cards: [] },
-];
-
-const createUserSchema = z.object({
-	name: z.string().trim().min(1, 'Name is required'),
+const registerSchema = z.object({
+	email: z.string().email('Invalid email'),
+	username: z.string().trim().min(1, 'Username is required'),
+	password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
-const updateUserSchema = z.object({
-	name: z.string().trim().min(1, 'Name must be a non-empty string').optional(),
+const updateSchema = z.object({
+	username: z.string().trim().min(1, 'Username must be a non-empty string'),
 });
 
 const addCardSchema = z.object({
 	cardId: z.string().min(1),
-	name: z.string().trim().min(1),
-	imageUrl: z.string().url(),
-	setName: z.string().trim().min(1),
-	rarity: z.string().trim().min(1).optional(),
 	quantity: z.number().int().min(1).default(1),
 	condition: z.enum(['NM', 'LP', 'MP', 'HP', 'DMG']).optional(),
-	priceSnapshot: z
-		.object({
-			low: z.number().optional(),
-			mid: z.number().optional(),
-			high: z.number().optional(),
-			capturedAt: z.string().min(1),
-		})
-		.optional(),
+	intent: z.enum(['own', 'sell', 'trade', 'want']).optional(),
 });
 
-const router = Router();
+// ─── Auth routes ───────────────────────────────────────────────────────────
 
-// GET /users
-router.get('/', (req: Request, res: Response) => {
-	return res.status(200).json(users);
-});
-
-router.get('/:id/cards', (req: Request<{ id: string }>, res: Response) => {
-	const id = Number(req.params.id);
-
-	const user = users.find((u) => u.id === id);
-	if (!user) {
-		return res.status(404).json({ error: 'User not found' });
-	}
-
-	return res.status(200).json({
-		userId: user.id,
-		count: user.cards.length,
-		cards: user.cards,
-	});
-});
-
-// POST /users
-router.post('/', (req: Request, res: Response) => {
-	const parsed = createUserSchema.safeParse(req.body);
-
+// POST /users/register
+router.post('/register', async (req: Request, res: Response) => {
+	const parsed = registerSchema.safeParse(req.body);
 	if (!parsed.success) {
 		return res.status(400).json({
 			error: parsed.error.issues[0]?.message ?? 'Invalid request body',
 		});
 	}
 
-	const name = parsed.data.name;
+	const { email, username, password } = parsed.data;
 
-	const newUser: User = {
-		id: users.length ? users[users.length - 1].id + 1 : 1,
-		name: name.trim(),
-		cards: [],
-	};
+	try {
+		const existing = await findUserByEmail(email);
+		if (existing) {
+			return res.status(409).json({ error: 'Email already in use' });
+		}
 
-	users.push(newUser);
-
-	return res.status(201).json(newUser);
+		const user = await createUser(email, username, password);
+		return res.status(201).json(user);
+	} catch (err) {
+		console.error('Register error:', err);
+		return res.status(500).json({ error: 'Registration failed. Check server logs.' });
+	}
 });
 
-router.post('/:id/cards', (req: Request<{ id: string }>, res: Response) => {
-	const id = Number(req.params.id);
+// POST /users/login
+router.post('/login', async (req: Request, res: Response) => {
+	const { email, password } = req.body;
+	if (!email || !password) {
+		return res.status(400).json({ error: 'Email and password are required' });
+	}
 
-	const user = users.find((u) => u.id === id);
+	try {
+		const user = await findUserByEmail(email);
+		if (!user) {
+			return res.status(401).json({ error: 'Invalid credentials' });
+		}
+
+		const valid = await verifyPassword(password, user.password_hash);
+		if (!valid) {
+			return res.status(401).json({ error: 'Invalid credentials' });
+		}
+
+		const { password_hash: _, ...safeUser } = user;
+		return res.status(200).json(safeUser);
+	} catch (err) {
+		console.error('Login error:', err);
+		return res.status(500).json({ error: 'Login failed. Check server logs.' });
+	}
+});
+
+// ─── User routes ───────────────────────────────────────────────────────────
+
+// GET /users/:id
+router.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
+	const user = await findUserById(req.params.id);
+	if (!user) {
+		return res.status(404).json({ error: 'User not found' });
+	}
+	return res.status(200).json(user);
+});
+
+// PATCH /users/:id
+router.patch('/:id', async (req: Request<{ id: string }>, res: Response) => {
+	const parsed = updateSchema.safeParse(req.body);
+	if (!parsed.success) {
+		return res.status(400).json({
+			error: parsed.error.issues[0]?.message ?? 'Invalid request body',
+		});
+	}
+
+	const user = await updateUsername(req.params.id, parsed.data.username);
+	if (!user) {
+		return res.status(404).json({ error: 'User not found' });
+	}
+	return res.status(200).json(user);
+});
+
+// DELETE /users/:id
+router.delete('/:id', async (req: Request<{ id: string }>, res: Response) => {
+	const deleted = await deleteUser(req.params.id);
+	if (!deleted) {
+		return res.status(404).json({ error: 'User not found' });
+	}
+	return res.status(204).send();
+});
+
+// ─── Binder routes ─────────────────────────────────────────────────────────
+
+// GET /users/:id/cards
+router.get('/:id/cards', async (req: Request<{ id: string }>, res: Response) => {
+	const user = await findUserById(req.params.id);
+	if (!user) {
+		return res.status(404).json({ error: 'User not found' });
+	}
+
+	const binder = await getOrCreateBinder(user.id);
+	const cards = await getBinderCards(binder.id);
+
+	return res.status(200).json({ binderId: binder.id, count: cards.length, cards });
+});
+
+// POST /users/:id/cards
+router.post('/:id/cards', async (req: Request<{ id: string }>, res: Response) => {
+	const user = await findUserById(req.params.id);
 	if (!user) {
 		return res.status(404).json({ error: 'User not found' });
 	}
@@ -126,84 +158,29 @@ router.post('/:id/cards', (req: Request<{ id: string }>, res: Response) => {
 		});
 	}
 
-	const now = new Date().toISOString();
+	const binder = await getOrCreateBinder(user.id);
+	const { cardId, quantity, condition, intent } = parsed.data;
+	const card = await addCardToBinder(binder.id, cardId, quantity, condition, intent);
 
-	const incoming = parsed.data;
-
-	// If the user already has this card in their collection, increase quantity
-	const existing = user.cards.find((c) => c.cardId === incoming.cardId);
-
-	if (existing) {
-		existing.quantity += incoming.quantity;
-		// optionally update snapshot/condition if provided
-		if (incoming.condition) existing.condition = incoming.condition;
-		if (incoming.priceSnapshot)
-			existing.priceSnapshot = incoming.priceSnapshot;
-		return res.status(200).json(existing);
-	}
-
-	const collectedCard = {
-		...incoming,
-		addedAt: now,
-	};
-
-	user.cards.push(collectedCard);
-
-	return res.status(201).json(collectedCard);
+	return res.status(201).json(card);
 });
 
-// GET /users/:id
-router.get('/:id', (req: Request<{ id: string }>, res: Response) => {
-	const id = Number(req.params.id);
+// DELETE /users/:id/cards/:cardId
+router.delete(
+	'/:id/cards/:cardId',
+	async (req: Request<{ id: string; cardId: string }>, res: Response) => {
+		const user = await findUserById(req.params.id);
+		if (!user) {
+			return res.status(404).json({ error: 'User not found' });
+		}
 
-	const user = users.find((u) => u.id === id);
-
-	if (!user) {
-		return res.status(404).json({ error: 'User not found' });
-	}
-
-	return res.status(200).json(user);
-});
-
-// PATCH /users/:id
-router.patch('/:id', (req: Request<{ id: string }>, res: Response) => {
-	const id = Number(req.params.id);
-
-	const user = users.find((u) => u.id === id);
-	if (!user) {
-		return res.status(404).json({ error: 'User not found' });
-	}
-
-	const parsed = updateUserSchema.safeParse(req.body);
-
-	if (!parsed.success) {
-		return res.status(400).json({
-			error: parsed.error.issues[0]?.message ?? 'Invalid request body',
-		});
-	}
-
-	if (parsed.data.name === undefined) {
-		return res.status(400).json({ error: 'Nothing to update' });
-	}
-
-	user.name = parsed.data.name;
-
-	return res.status(200).json(user);
-});
-
-// DELETE /users/:id
-router.delete('/:id', (req: Request<{ id: string }>, res: Response) => {
-	const id = Number(req.params.id);
-
-	const index = users.findIndex((u) => u.id === id);
-
-	if (index === -1) {
-		return res.status(404).json({ error: 'User not found' });
-	}
-
-	users.splice(index, 1);
-
-	return res.status(204).send();
-});
+		const binder = await getOrCreateBinder(user.id);
+		const removed = await removeCardFromBinder(binder.id, req.params.cardId);
+		if (!removed) {
+			return res.status(404).json({ error: 'Card not in binder' });
+		}
+		return res.status(204).send();
+	},
+);
 
 export default router;

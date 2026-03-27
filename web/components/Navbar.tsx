@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
 import { useState } from 'react';
 import {
 	HiShoppingBag,
@@ -13,6 +14,7 @@ import {
 
 export default function Navbar() {
 	const pathname = usePathname();
+	const { data: session } = useSession();
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 	const isActive = (path: string) => {
@@ -169,56 +171,66 @@ export default function Navbar() {
 								</span>
 							</span>
 						</Link>
-						<Link
-							href='/login'
-							className='nav-login-premium flex items-center gap-1.5'
-							onMouseEnter={(e) => {
-								const arrow =
-									e.currentTarget.querySelector('.login-arrow');
-								if (arrow) {
-									(arrow as HTMLElement).style.transform =
-										'translateX(2px)';
-								}
-							}}
-							onMouseLeave={(e) => {
-								const arrow =
-									e.currentTarget.querySelector('.login-arrow');
-								if (arrow) {
-									(arrow as HTMLElement).style.transform =
-										'translateX(0)';
-								}
-							}}
-						>
-							<span>Login</span>
-							<HiArrowRight className='login-arrow w-4 h-4' />
-						</Link>
+						{session ? (
+							<div className='flex items-center gap-3'>
+								<span
+									className='text-sm font-medium'
+									style={{ color: 'var(--text-secondary)' }}
+								>
+									{session.user.username}
+								</span>
+								<button
+									onClick={() => signOut({ callbackUrl: '/' })}
+									className='nav-login-premium flex items-center gap-1.5'
+								>
+									Sign Out
+								</button>
+							</div>
+						) : (
+							<Link
+								href='/login'
+								className='nav-login-premium flex items-center gap-1.5'
+								onMouseEnter={(e) => {
+									const arrow = e.currentTarget.querySelector('.login-arrow');
+									if (arrow) (arrow as HTMLElement).style.transform = 'translateX(2px)';
+								}}
+								onMouseLeave={(e) => {
+									const arrow = e.currentTarget.querySelector('.login-arrow');
+									if (arrow) (arrow as HTMLElement).style.transform = 'translateX(0)';
+								}}
+							>
+								<span>Login</span>
+								<HiArrowRight className='login-arrow w-4 h-4' />
+							</Link>
+						)}
 					</div>
 
 					{/* Mobile Menu Button */}
 					<div className='md:hidden flex items-center gap-3'>
-						<Link
-							href='/login'
-							className='nav-login-premium nav-login-premium-mobile flex items-center gap-1.5'
-							onMouseEnter={(e) => {
-								const arrow =
-									e.currentTarget.querySelector('.login-arrow');
-								if (arrow) {
-									(arrow as HTMLElement).style.transform =
-										'translateX(2px)';
-								}
-							}}
-							onMouseLeave={(e) => {
-								const arrow =
-									e.currentTarget.querySelector('.login-arrow');
-								if (arrow) {
-									(arrow as HTMLElement).style.transform =
-										'translateX(0)';
-								}
-							}}
-						>
-							<span>Login</span>
-							<HiArrowRight className='login-arrow w-4 h-4' />
-						</Link>
+						{session ? (
+							<button
+								onClick={() => signOut({ callbackUrl: '/' })}
+								className='nav-login-premium nav-login-premium-mobile flex items-center gap-1.5'
+							>
+								Sign Out
+							</button>
+						) : (
+							<Link
+								href='/login'
+								className='nav-login-premium nav-login-premium-mobile flex items-center gap-1.5'
+								onMouseEnter={(e) => {
+									const arrow = e.currentTarget.querySelector('.login-arrow');
+									if (arrow) (arrow as HTMLElement).style.transform = 'translateX(2px)';
+								}}
+								onMouseLeave={(e) => {
+									const arrow = e.currentTarget.querySelector('.login-arrow');
+									if (arrow) (arrow as HTMLElement).style.transform = 'translateX(0)';
+								}}
+							>
+								<span>Login</span>
+								<HiArrowRight className='login-arrow w-4 h-4' />
+							</Link>
+						)}
 						<button
 							onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
 							className='navbar-link p-2 rounded-lg'

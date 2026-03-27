@@ -210,22 +210,40 @@ CREATE INDEX idx_prices_source ON prices(source);
 CREATE INDEX idx_prices_updated_at ON prices(updated_at);
 
 -- =========================================
--- 1️⃣2️⃣ BINDERS
--- Abstracts ownership from users (future-proof)
+-- 1️⃣2️⃣ USERS
+-- Stores registered user accounts with hashed passwords
 -- =========================================
-CREATE TABLE binders (
+CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name TEXT NOT NULL DEFAULT 'My Binder',
-  is_public BOOLEAN DEFAULT true,
-  
+  email TEXT NOT NULL UNIQUE,
+  username TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
 
+CREATE INDEX idx_users_email ON users(email);
+
+-- =========================================
+-- 1️⃣3️⃣ BINDERS
+-- One binder per user (extendable to many later)
+-- =========================================
+CREATE TABLE binders (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL DEFAULT 'My Binder',
+  is_public BOOLEAN DEFAULT true,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE INDEX idx_binders_user_id ON binders(user_id);
 CREATE INDEX idx_binders_name ON binders(name);
 
 -- =========================================
--- 1️⃣3️⃣ BINDER_CARDS
+-- 1️⃣4️⃣ BINDER_CARDS
 -- Most important table for future algorithms
 -- =========================================
 CREATE TABLE binder_cards (

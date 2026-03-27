@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
 import {
 	fetchCards,
 	fetchSets,
@@ -9,6 +10,7 @@ import {
 	fetchCardTypes,
 	Card as CardType,
 } from '@/lib/api/cards';
+import { addCardToBinder, removeCardFromBinder, fetchBinder } from '@/lib/api/binder';
 import Card from '@/components/card/Card';
 import CardModal from '@/components/card/CardModal';
 import FilterSection from '@/components/card/FilterSection';
@@ -30,6 +32,8 @@ export default function CardCollection({
 	showHeader = true,
 	headerTitle = 'Card Catalogue',
 }: CardCollectionProps) {
+	const { data: session } = useSession();
+	const queryClient = useQueryClient();
 	const [page, setPage] = useState(1);
 	const [search, setSearch] = useState(initialSearch);
 	const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
@@ -123,6 +127,15 @@ export default function CardCollection({
 		queryKey: ['cardTypes'],
 		queryFn: fetchCardTypes,
 	});
+	// Fetch the user's binder so we can highlight cards already added
+	const { data: binderData } = useQuery({
+		queryKey: ['binder', session?.user.id],
+		queryFn: () => fetchBinder(session!.user.id),
+		enabled: !!session?.user.id,
+	});
+
+	const binderCardIds = new Set(binderData?.cards.map((c) => c.card_id) ?? []);
+
 	const uniqueSets = setsData || [];
 	const uniqueCardTypes = cardTypesData || [];
 	const uniqueRarities = raritiesData || [];
@@ -269,6 +282,15 @@ export default function CardCollection({
 										key={card.id}
 										card={card}
 										onClick={() => setSelectedCard(card)}
+										isInBinder={binderCardIds.has(card.id)}
+										onAddToBinder={session?.user.id ? async () => {
+											await addCardToBinder(session.user.id, card.id);
+											queryClient.invalidateQueries({ queryKey: ['binder', session.user.id] });
+										} : undefined}
+										onRemoveFromBinder={session?.user.id ? async () => {
+											await removeCardFromBinder(session.user.id, card.id);
+											queryClient.invalidateQueries({ queryKey: ['binder', session.user.id] });
+										} : undefined}
 									/>
 								))}
 							</div>

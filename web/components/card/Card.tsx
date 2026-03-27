@@ -7,10 +7,17 @@ interface CardProps {
 	card: CardType;
 	onClick?: () => void;
 	isInBinder?: boolean;
+	onAddToBinder?: () => Promise<void>;
+	onRemoveFromBinder?: () => Promise<void>;
 }
 
-export default function Card({ card, onClick, isInBinder = false }: CardProps) {
+export default function Card({ card, onClick, isInBinder = false, onAddToBinder, onRemoveFromBinder }: CardProps) {
 	const [added, setAdded] = useState(isInBinder);
+
+	// Sync prop changes (e.g. when binder data reloads)
+	useEffect(() => {
+		setAdded(isInBinder);
+	}, [isInBinder]);
 
 	// Log card data when component renders
 	useEffect(() => {
@@ -25,9 +32,15 @@ export default function Card({ card, onClick, isInBinder = false }: CardProps) {
 		});
 	}, [card]);
 
-	const handleAddToBinder = (e: React.MouseEvent) => {
+	const handleAddToBinder = async (e: React.MouseEvent) => {
 		e.stopPropagation();
-		setAdded(!added);
+		if (added) {
+			await onRemoveFromBinder?.();
+			setAdded(false);
+		} else {
+			await onAddToBinder?.();
+			setAdded(true);
+		}
 	};
 
 	const rarityLower = card.rarity?.toLowerCase() || '';
