@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import {
@@ -10,7 +11,7 @@ import {
 	fetchCardTypes,
 	Card as CardType,
 } from '@/lib/api/cards';
-import { addCardToBinder, removeCardFromBinder, updateBinderCard, fetchBinder } from '@/lib/api/binder';
+import { addCardToBinder, updateBinderCard, fetchBinder } from '@/lib/api/binder';
 import Card from '@/components/card/Card';
 import CardModal from '@/components/card/CardModal';
 import FilterSection from '@/components/card/FilterSection';
@@ -34,6 +35,7 @@ export default function CardCollection({
 }: CardCollectionProps) {
 	const { data: session } = useSession();
 	const queryClient = useQueryClient();
+	const router = useRouter();
 	const [page, setPage] = useState(1);
 	const [search, setSearch] = useState(initialSearch);
 	const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
@@ -135,7 +137,7 @@ export default function CardCollection({
 	});
 
 	const binderEntryMap = new Map(
-		(binderData?.cards ?? []).map((c) => [c.card_id, { quantity: c.quantity, condition: c.condition }])
+		(binderData?.cards ?? []).map((c) => [c.card_id, { quantity: c.quantity, condition: c.condition, intent: c.intent }])
 	);
 
 	const uniqueSets = setsData || [];
@@ -283,18 +285,15 @@ export default function CardCollection({
 									<Card
 										key={card.id}
 										card={card}
-										onClick={() => setSelectedCard(card)}
+										onClick={() => router.push(`/card/${card.id}`)}
 										binderEntry={binderEntryMap.get(card.id) ?? null}
-										onAddToBinder={session?.user.id ? async (qty, cond) => {
-											await addCardToBinder(session.user.id, card.id, qty, cond);
-											queryClient.invalidateQueries({ queryKey: ['binder', session.user.id] });
-										} : undefined}
-										onUpdateBinder={session?.user.id ? async (qty, cond) => {
-											await updateBinderCard(session.user.id, card.id, qty, cond);
-											queryClient.invalidateQueries({ queryKey: ['binder', session.user.id] });
-										} : undefined}
-										onRemoveFromBinder={session?.user.id ? async () => {
-											await removeCardFromBinder(session.user.id, card.id);
+										onToggleBinder={session?.user.id ? async (intent) => {
+											const existing = binderEntryMap.get(card.id);
+											if (existing) {
+												await updateBinderCard(session.user.id, card.id, existing.quantity, existing.condition ?? undefined, intent);
+											} else {
+												await addCardToBinder(session.user.id, card.id, 1, 'Near Mint', intent);
+											}
 											queryClient.invalidateQueries({ queryKey: ['binder', session.user.id] });
 										} : undefined}
 									/>

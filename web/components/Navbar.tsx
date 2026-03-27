@@ -214,12 +214,25 @@ export default function Navbar() {
 					{/* Mobile Menu Button */}
 					<div className='md:hidden flex items-center gap-3'>
 						{session ? (
-							<button
-								onClick={() => signOut({ callbackUrl: '/' })}
-								className='nav-login-premium nav-login-premium-mobile flex items-center gap-1.5'
-							>
-								Sign Out
-							</button>
+							<div className='flex items-center gap-2'>
+								<Link
+									href='/profile'
+									title={session.user.username}
+									className='w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold font-brand shrink-0'
+									style={{
+										background: 'linear-gradient(135deg, var(--vault-gold), var(--vault-gold-dark))',
+										color: 'var(--text-inverse)',
+									}}
+								>
+									{session.user.username.split(/\s+/).map((w: string) => w[0]).join('').toUpperCase().slice(0, 2)}
+								</Link>
+								<button
+									onClick={() => signOut({ callbackUrl: '/' })}
+									className='nav-login-premium nav-login-premium-mobile flex items-center gap-1.5'
+								>
+									Sign Out
+								</button>
+							</div>
 						) : (
 							<Link
 								href='/login'

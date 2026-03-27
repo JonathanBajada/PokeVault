@@ -54,6 +54,7 @@ const addCardSchema = z.object({
 const updateCardSchema = z.object({
 	quantity: z.number().int().min(1).max(99).optional(),
 	condition: z.enum(CONDITION_VALUES).optional(),
+	intent: z.enum(['own', 'want']).optional(),
 });
 
 // ─── Auth routes ───────────────────────────────────────────────────────────
@@ -211,7 +212,7 @@ router.patch(
 			});
 		}
 
-		if (!parsed.data.quantity && !parsed.data.condition) {
+		if (!parsed.data.quantity && !parsed.data.condition && !parsed.data.intent) {
 			return res.status(400).json({ error: 'Nothing to update' });
 		}
 
@@ -219,8 +220,9 @@ router.patch(
 		const updated = await updateBinderCard(
 			binder.id,
 			req.params.cardId,
-			parsed.data.quantity!,
+			parsed.data.quantity ?? 1,
 			parsed.data.condition,
+			parsed.data.intent,
 		);
 		if (!updated) return res.status(404).json({ error: 'Card not in binder' });
 		return res.status(200).json(updated);

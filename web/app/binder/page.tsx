@@ -4,14 +4,16 @@ import { useSession } from 'next-auth/react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { HiBookOpen, HiTrash, HiFunnel } from 'react-icons/hi2';
-import { fetchBinder, removeCardFromBinder, updateBinderCard, BinderCard } from '@/lib/api/binder';
+import Link from 'next/link';
+import { HiBookOpen, HiTrash, HiFunnel, HiLink } from 'react-icons/hi2';
+import { fetchBinder, removeCardFromBinder, updateBinderCard, BinderCard, CONDITIONS } from '@/lib/api/binder';
 
 export default function BinderPage() {
 	const { data: session, status } = useSession();
 	const router = useRouter();
 	const queryClient = useQueryClient();
 	const [selectedSet, setSelectedSet] = useState('');
+	const [intentFilter, setIntentFilter] = useState<'' | 'own' | 'want'>('');
 
 	useEffect(() => {
 		if (status === 'unauthenticated') {
@@ -34,8 +36,8 @@ export default function BinderPage() {
 	});
 
 	const updateMutation = useMutation({
-		mutationFn: ({ cardId, quantity, condition }: { cardId: string; quantity: number; condition?: string }) =>
-			updateBinderCard(session!.user.id, cardId, quantity, condition),
+		mutationFn: ({ cardId, quantity, condition, intent }: { cardId: string; quantity: number; condition?: string; intent?: 'own' | 'want' }) =>
+			updateBinderCard(session!.user.id, cardId, quantity, condition, intent),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['binder', session!.user.id] });
 		},
@@ -47,12 +49,15 @@ export default function BinderPage() {
 		return [...new Set(binder.cards.map((c) => c.set_name))].sort();
 	}, [binder]);
 
-	// Filter cards by selected set
+	// Filter cards by selected set and intent
 	const visibleCards = useMemo(() => {
 		if (!binder) return [];
-		if (!selectedSet) return binder.cards;
-		return binder.cards.filter((c) => c.set_name === selectedSet);
-	}, [binder, selectedSet]);
+		let cards = binder.cards;
+		if (selectedSet) cards = cards.filter((c) => c.set_name === selectedSet);
+		if (intentFilter === 'own') cards = cards.filter((c) => c.intent !== 'want');
+		if (intentFilter === 'want') cards = cards.filter((c) => c.intent === 'want');
+		return cards;
+	}, [binder, selectedSet, intentFilter]);
 
 	// Total binder value
 	const totalValue = useMemo(() => {
@@ -66,11 +71,9 @@ export default function BinderPage() {
 
 	// Value of filtered cards
 	const filteredValue = useMemo(() => {
-		if (!selectedSet || totalValue === null) return null;
-		return visibleCards.reduce((sum, c) => {
-			return sum + (c.market_price ?? 0) * c.quantity;
-		}, 0);
-	}, [visibleCards, selectedSet, totalValue]);
+		if ((!selectedSet && !intentFilter) || totalValue === null) return null;
+		return visibleCards.reduce((sum, c) => sum + (c.market_price ?? 0) * c.quantity, 0);
+	}, [visibleCards, selectedSet, intentFilter, totalValue]);
 
 	if (status === 'loading' || isLoading) {
 		return (
@@ -147,7 +150,7 @@ export default function BinderPage() {
 										${totalValue.toFixed(2)}
 									</p>
 								</div>
-								{selectedSet && filteredValue !== null && (
+								{(selectedSet || intentFilter) && filteredValue !== null && (
 									<>
 										<div
 											style={{
@@ -203,6 +206,32 @@ export default function BinderPage() {
 								</select>
 							</div>
 						)}
+					</div>
+				)}
+
+				{/* Intent filter tabs */}
+				{binder && binder.cards.length > 0 && (
+					<div className='flex gap-1 mb-6 p-1 rounded-xl w-fit' style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-default)' }}>
+						{([['', 'All'], ['own', 'Owned'], ['want', 'Want List']] as const).map(([val, label]) => (
+							<button
+								key={val}
+								onClick={() => setIntentFilter(val)}
+								className='px-4 py-1.5 rounded-lg text-sm font-medium transition-all'
+								style={intentFilter === val ? {
+									background: val === 'want' ? 'rgba(99,179,237,0.2)' : 'var(--vault-gold)',
+									color: val === 'want' ? '#63b3ed' : '#0b0b0d',
+								} : { color: 'var(--text-muted)' }}
+							>
+								{label}
+								{val !== '' && (
+									<span className='ml-1.5 text-xs opacity-70'>
+										({val === 'want'
+											? binder.cards.filter(c => c.intent === 'want').length
+											: binder.cards.filter(c => c.intent !== 'want').length})
+									</span>
+								)}
+							</button>
+						))}
 					</div>
 				)}
 
@@ -276,9 +305,12 @@ function BinderCardTile({
 }: {
 	card: BinderCard;
 	onRemove: () => void;
-	onUpdate: (quantity: number, condition?: string) => void;
+	onUpdate: (quantity: number, condition?: string, intent?: 'own' | 'want') => void;
 	isRemoving: boolean;
 }) {
+	const [condition, setCondition] = useState(card.condition ?? 'Near Mint');
+	const isWanted = card.intent === 'want';
+
 	const rarityLower = card.rarity?.toLowerCase() ?? '';
 	const isHolo = rarityLower.includes('rare holo') || rarityLower.includes('holo');
 
@@ -329,11 +361,7 @@ function BinderCardTile({
 					{card.set_name && (
 						<p className='card-set-name line-clamp-1'>{card.set_name}</p>
 					)}
-					{card.condition && (
-						<p className='text-xs mt-1' style={{ color: 'var(--text-muted)' }}>
-							{card.condition}
-						</p>
-					)}
+
 				</div>
 
 				<div
@@ -356,11 +384,54 @@ function BinderCardTile({
 						</p>
 					</div>
 
-					{/* Inline quantity controls */}
-					<div className='px-6 pt-3 pb-4 flex items-center justify-between gap-2'>
-						<div className='flex items-center gap-1'>
+					{/* Own / Want toggle */}
+					<div className='px-6 pb-2 flex gap-1'>
+						{(['own', 'want'] as const).map((v) => (
 							<button
-								onClick={() => onUpdate(Math.max(1, card.quantity - 1))}
+								key={v}
+								onClick={() => onUpdate(card.quantity, condition, v)}
+								disabled={isRemoving || (v === 'want' ? isWanted : !isWanted)}
+								className='flex-1 py-1 rounded-lg text-xs font-medium transition-all disabled:cursor-default'
+								style={
+									(v === 'want' && isWanted) || (v === 'own' && !isWanted)
+										? { background: v === 'want' ? 'rgba(99,179,237,0.2)' : 'rgba(199,179,119,0.2)', color: v === 'want' ? '#63b3ed' : 'var(--vault-gold)', border: '1px solid currentColor' }
+										: { background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border-default)' }
+								}
+							>
+								{v === 'want' ? '♡ Want' : '✓ Own'}
+							</button>
+						))}
+					</div>
+
+					{/* Condition dropdown — only for owned cards */}
+					{!isWanted && (
+						<div className='px-6 pb-2'>
+							<select
+								value={condition}
+								onChange={(e) => {
+									setCondition(e.target.value);
+									onUpdate(card.quantity, e.target.value);
+								}}
+								disabled={isRemoving}
+								className='w-full px-2 py-1.5 rounded-lg text-xs'
+								style={{
+									background: 'rgba(255,255,255,0.06)',
+									border: '1px solid var(--border-default)',
+									color: 'var(--text-primary)',
+								}}
+							>
+								{CONDITIONS.map((c) => (
+									<option key={c} value={c}>{c}</option>
+								))}
+							</select>
+						</div>
+					)}
+
+					{/* Quantity + actions */}
+					<div className='px-6 pt-2 pb-6 flex items-center justify-between gap-2'>
+						<div className='flex items-center gap-1' style={{ visibility: isWanted ? 'hidden' : 'visible' }}>
+							<button
+								onClick={() => onUpdate(Math.max(1, card.quantity - 1), condition)}
 								disabled={card.quantity <= 1 || isRemoving}
 								className='btn-secondary w-7 h-7 flex items-center justify-center rounded-lg text-sm font-bold disabled:opacity-30'
 							>
@@ -373,7 +444,7 @@ function BinderCardTile({
 								{card.quantity}
 							</span>
 							<button
-								onClick={() => onUpdate(Math.min(99, card.quantity + 1))}
+								onClick={() => onUpdate(Math.min(99, card.quantity + 1), condition)}
 								disabled={card.quantity >= 99 || isRemoving}
 								className='btn-secondary w-7 h-7 flex items-center justify-center rounded-lg text-sm font-bold disabled:opacity-30'
 							>
@@ -389,6 +460,14 @@ function BinderCardTile({
 						>
 							<HiTrash className='w-4 h-4' />
 						</button>
+						<Link
+							href={`/card/${card.card_id}`}
+							className='btn-secondary p-2 flex items-center justify-center'
+							aria-label='View card page'
+							title='View card page'
+						>
+							<HiLink className='w-4 h-4' />
+						</Link>
 					</div>
 				</div>
 			</div>

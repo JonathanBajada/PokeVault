@@ -40,11 +40,12 @@ export async function addCardToBinder(
 	cardId: string,
 	quantity = 1,
 	condition?: string,
+	intent?: 'own' | 'want',
 ): Promise<BinderCard> {
 	const res = await fetch(`/api/binder/${userId}/cards`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ cardId, quantity, condition }),
+		body: JSON.stringify({ cardId, quantity, condition, intent }),
 	});
 	if (!res.ok) throw new Error('Failed to add card to binder');
 	return res.json();
@@ -55,11 +56,12 @@ export async function updateBinderCard(
 	cardId: string,
 	quantity: number,
 	condition?: string,
+	intent?: 'own' | 'want',
 ): Promise<BinderCard> {
 	const res = await fetch(`/api/binder/${userId}/cards/${cardId}`, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ quantity, condition }),
+		body: JSON.stringify({ quantity, condition, intent }),
 	});
 	if (!res.ok) throw new Error('Failed to update binder card');
 	return res.json();

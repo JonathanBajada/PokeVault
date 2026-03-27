@@ -126,12 +126,13 @@ export async function updateBinderCard(
 	cardId: string,
 	quantity: number,
 	condition?: string,
+	intent?: string,
 ): Promise<BinderCard | null> {
 	const result = await pool.query(
 		`UPDATE binder_cards
-		 SET quantity = $1, condition = COALESCE($2, condition), updated_at = now()
-		 WHERE binder_id = $3 AND card_id = $4`,
-		[quantity, condition ?? null, binderId, cardId],
+		 SET quantity = $1, condition = COALESCE($2, condition), intent = COALESCE($3, intent), updated_at = now()
+		 WHERE binder_id = $4 AND card_id = $5`,
+		[quantity, condition ?? null, intent ?? null, binderId, cardId],
 	);
 	if ((result.rowCount ?? 0) === 0) return null;
 
