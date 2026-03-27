@@ -1,3 +1,5 @@
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+
 export type Card = {
 	id: string;
 	name: string;
@@ -85,7 +87,7 @@ export async function fetchCards({
 	if (maxPrice) params.set('maxPrice', maxPrice);
 	if (priceSort) params.set('priceSort', priceSort);
 
-	const res = await fetch(`http://localhost:4000/cards?${params.toString()}`);
+	const res = await fetch(`${API_URL}/cards?${params.toString()}`);
 
 	if (!res.ok) {
 		throw new Error('Failed to fetch cards');
@@ -119,7 +121,7 @@ export async function fetchCards({
 }
 
 export async function fetchSets(): Promise<string[]> {
-	const res = await fetch('http://localhost:4000/cards/sets');
+	const res = await fetch(`${API_URL}/cards/sets`);
 
 	if (!res.ok) {
 		throw new Error('Failed to fetch sets');
@@ -130,7 +132,7 @@ export async function fetchSets(): Promise<string[]> {
 }
 
 export async function fetchRarities(): Promise<string[]> {
-	const res = await fetch('http://localhost:4000/cards/rarities');
+	const res = await fetch(`${API_URL}/cards/rarities`);
 
 	if (!res.ok) {
 		throw new Error('Failed to fetch rarities');
@@ -141,7 +143,7 @@ export async function fetchRarities(): Promise<string[]> {
 }
 
 export async function fetchCardTypes(): Promise<string[]> {
-	const res = await fetch('http://localhost:4000/cards/types');
+	const res = await fetch(`${API_URL}/cards/types`);
 
 	if (!res.ok) {
 		throw new Error('Failed to fetch card types');
@@ -152,7 +154,7 @@ export async function fetchCardTypes(): Promise<string[]> {
 }
 
 export async function fetchCardById(id: string): Promise<CardDetail> {
-	const res = await fetch(`http://localhost:4000/cards/${id}`);
+	const res = await fetch(`${API_URL}/cards/${id}`);
 
 	if (!res.ok) {
 		if (res.status === 404) {

@@ -4,6 +4,8 @@
 	"description": "**PokeVault** is a full-stack video game collection and marketplace platform that allows users to discover games, build personal libraries, and trade or sell items with other users.",
 	"main": "server.ts",
 	"scripts": {
+		"build": "tsc",
+		"start": "node dist/src/server.js",
 		"dev": "ts-node-dev --respawn --transpile-only src/server.ts",
 		"typecheck": "tsc --noEmit",
 		"fetch-cards": "ts-node src/scripts/fetch-all-cards.ts",
