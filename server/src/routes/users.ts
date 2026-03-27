@@ -5,6 +5,7 @@ import {
 	deleteUser,
 	findUserByEmail,
 	findUserById,
+	findUserByUsername,
 	updateUser,
 	verifyPassword,
 } from '../repositories/user-repository';
@@ -246,5 +247,25 @@ router.delete(
 		return res.status(204).send();
 	},
 );
+
+// ─── Public routes ─────────────────────────────────────────────────────────
+
+// GET /users/by-username/:username/wants  — public, no auth required
+router.get('/by-username/:username/wants', async (req: Request<{ username: string }>, res: Response) => {
+	const user = await findUserByUsername(req.params.username);
+	if (!user) {
+		return res.status(404).json({ error: 'User not found' });
+	}
+
+	const binder = await getOrCreateBinder(user.id);
+	const allCards = await getBinderCards(binder.id);
+	const wants = allCards.filter((c) => c.intent === 'want');
+
+	return res.status(200).json({
+		username: user.username,
+		count: wants.length,
+		cards: wants,
+	});
+});
 
 export default router;

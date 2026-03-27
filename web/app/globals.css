@@ -454,7 +454,6 @@ body::after {
 	border-radius: 0.6rem;
 	border: 1px solid var(--border-default);
 	box-shadow: var(--shadow-md), inset 0 0 0 1px var(--white-overlay-02);
-	overflow: hidden;
 	transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 

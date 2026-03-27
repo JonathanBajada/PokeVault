@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
-import { HiArrowLeft, HiLink, HiCheck } from 'react-icons/hi2';
+import { HiArrowLeft, HiCheck } from 'react-icons/hi2';
 import { CardDetail } from '@/lib/api/cards';
 import { fetchBinder, addCardToBinder, updateBinderCard, removeCardFromBinder, CONDITIONS } from '@/lib/api/binder';
 
@@ -17,7 +17,6 @@ export default function CardDetailClient({ card }: Props) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 	const [popoverOpen, setPopoverOpen] = useState(false);
-	const [copied, setCopied] = useState(false);
 
 	const { data: binder } = useQuery({
 		queryKey: ['binder', session?.user.id],
@@ -25,8 +24,9 @@ export default function CardDetailClient({ card }: Props) {
 		enabled: !!session?.user.id,
 	});
 
-	const binderEntry = binder?.cards.find((c) => c.card_id === card.id)
-		? { quantity: binder!.cards.find((c) => c.card_id === card.id)!.quantity, condition: binder!.cards.find((c) => c.card_id === card.id)!.condition }
+	const binderCard = binder?.cards.find((c) => c.card_id === card.id) ?? null;
+	const binderEntry = binderCard
+		? { quantity: binderCard.quantity, condition: binderCard.condition, intent: binderCard.intent }
 		: null;
 
 	const addMutation = useMutation({
@@ -46,6 +46,12 @@ export default function CardDetailClient({ card }: Props) {
 		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['binder', session?.user.id] }),
 	});
 
+	const intentMutation = useMutation({
+		mutationFn: (intent: 'own' | 'want') =>
+			updateBinderCard(session!.user.id, card.id, binderEntry!.quantity, binderEntry!.condition ?? undefined, intent),
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['binder', session?.user.id] }),
+	});
+
 	const rarityLower = card.rarity?.toLowerCase() ?? '';
 	const isHolo = rarityLower.includes('holo');
 	const getRarityColorCategory = (): 'COMMON' | 'UNCOMMON' | 'RARE' => {
@@ -56,12 +62,7 @@ export default function CardDetailClient({ card }: Props) {
 		return 'RARE';
 	};
 	const rarityColorCategory = getRarityColorCategory();
-
-	function copyLink() {
-		navigator.clipboard.writeText(window.location.href);
-		setCopied(true);
-		setTimeout(() => setCopied(false), 2000);
-	}
+	const isWanted = binderEntry?.intent === 'want';
 
 	return (
 		<div className='min-h-screen py-8' style={{ paddingTop: '5rem' }}>
@@ -83,10 +84,12 @@ export default function CardDetailClient({ card }: Props) {
 							className={`card-detail-image-bg relative rounded-2xl overflow-hidden ${isHolo ? 'holo' : ''}`}
 							data-rarity={rarityColorCategory}
 						>
-							<div
-								className='absolute inset-0 pointer-events-none'
-								style={{ background: 'radial-gradient(circle at center, var(--vault-gold-soft) 0%, transparent 70%)', opacity: 0.6 }}
-							/>
+							{rarityColorCategory === 'RARE' && (
+								<div
+									className='absolute inset-0 pointer-events-none'
+									style={{ background: 'radial-gradient(circle at center, var(--vault-gold-soft) 0%, transparent 70%)', opacity: 0.6 }}
+								/>
+							)}
 							<div className='card-image-wrapper relative p-3 md:p-12 min-h-[300px] flex items-center justify-center'>
 								{card.image_large_url || card.image_small_url ? (
 									<img
@@ -141,7 +144,8 @@ export default function CardDetailClient({ card }: Props) {
 								</div>
 
 								{/* Action buttons */}
-								<div className='flex gap-2 mb-5'>
+								<div className='flex flex-col gap-2 mb-5'>
+									{/* Add / In Binder button */}
 									<div className='relative'>
 										{popoverOpen && (
 											<BinderPopover
@@ -180,14 +184,43 @@ export default function CardDetailClient({ card }: Props) {
 										</button>
 									</div>
 
-									<button
-										onClick={copyLink}
-										className='btn-secondary flex items-center gap-1.5 px-3 py-2 text-sm'
-										title='Copy link'
-									>
-										{copied ? <HiCheck className='w-4 h-4' style={{ color: '#4ade80' }} /> : <HiLink className='w-4 h-4' />}
-										{copied ? 'Copied' : 'Share'}
-									</button>
+									{/* Own / Want toggle — only shown when card is already in binder */}
+									{binderEntry && session && (
+										<div className='flex gap-2'>
+											<button
+												onClick={() => intentMutation.mutate('own')}
+												disabled={intentMutation.isPending || !isWanted}
+												className='flex-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all'
+												style={!isWanted ? {
+													background: 'linear-gradient(135deg, var(--vault-gold), var(--vault-gold-dark))',
+													color: '#0b0b0d',
+													border: '1px solid transparent',
+												} : {
+													background: 'transparent',
+													color: 'var(--text-muted)',
+													border: '1px solid var(--border-default)',
+												}}
+											>
+												Own
+											</button>
+											<button
+												onClick={() => intentMutation.mutate('want')}
+												disabled={intentMutation.isPending || isWanted}
+												className='flex-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all'
+												style={isWanted ? {
+													background: 'rgba(99,179,237,0.2)',
+													color: '#63b3ed',
+													border: '1px solid rgba(99,179,237,0.4)',
+												} : {
+													background: 'transparent',
+													color: 'var(--text-muted)',
+													border: '1px solid var(--border-default)',
+												}}
+											>
+												♡ Want
+											</button>
+										</div>
+									)}
 								</div>
 							</div>
 

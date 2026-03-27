@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { HiPencil, HiCheck, HiXMark } from 'react-icons/hi2';
+import { HiPencil, HiCheck, HiXMark, HiLink } from 'react-icons/hi2';
 import { fetchBinder, BinderCard } from '@/lib/api/binder';
 import { Card } from '@/lib/api/cards';
 import CardModal from '@/components/card/CardModal';
@@ -108,6 +108,14 @@ export default function ProfilePage() {
 
 	// Card modal state
 	const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+	const [linkCopied, setLinkCopied] = useState(false);
+
+	function copyWantListLink() {
+		const url = `${window.location.origin}/u/${session?.user.username}/wants`;
+		navigator.clipboard.writeText(url);
+		setLinkCopied(true);
+		setTimeout(() => setLinkCopied(false), 2000);
+	}
 
 	useEffect(() => {
 		if (status === 'unauthenticated') router.push('/login');
@@ -349,6 +357,14 @@ export default function ProfilePage() {
 									>
 										Member since {memberSince}
 									</p>
+									<button
+										onClick={copyWantListLink}
+										className='flex items-center gap-1.5 mt-3 text-xs btn-secondary px-3 py-1.5 rounded-lg w-fit'
+										style={{ color: linkCopied ? '#4ade80' : 'var(--text-muted)' }}
+									>
+										{linkCopied ? <HiCheck className='w-3.5 h-3.5' /> : <HiLink className='w-3.5 h-3.5' />}
+										{linkCopied ? 'Copied!' : 'Copy want list link'}
+									</button>
 								</div>
 							)}
 						</div>

@@ -419,6 +419,25 @@ async function seedNewSchema() {
 		}
 		console.log(`  Inserted ${tcgpricesInserted} TCGPlayer price entries`);
 
+		// Step 10b: Insert price_history snapshots (one per card, market price)
+		console.log('Inserting price history snapshots...');
+		let priceHistoryInserted = 0;
+		for (const card of cards) {
+			if (card.tcgplayer?.prices) {
+				const marketPrice = Object.values(card.tcgplayer.prices)
+					.map((p) => p.market)
+					.find((m) => m != null) ?? null;
+				if (marketPrice !== null) {
+					await client.query(
+						`INSERT INTO price_history (card_id, price) VALUES ($1, $2)`,
+						[card.id, marketPrice],
+					);
+					priceHistoryInserted++;
+				}
+			}
+		}
+		console.log(`  Inserted ${priceHistoryInserted} price history snapshots`);
+
 		// Step 11: Insert prices (cardmarket)
 		console.log('Inserting Cardmarket prices...');
 		let cmPricesInserted = 0;

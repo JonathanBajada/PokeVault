@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { HiBookOpen, HiTrash, HiFunnel, HiLink } from 'react-icons/hi2';
+import { HiBookOpen, HiTrash, HiFunnel } from 'react-icons/hi2';
 import { fetchBinder, removeCardFromBinder, updateBinderCard, BinderCard, CONDITIONS } from '@/lib/api/binder';
 
 export default function BinderPage() {
@@ -460,14 +460,6 @@ function BinderCardTile({
 						>
 							<HiTrash className='w-4 h-4' />
 						</button>
-						<Link
-							href={`/card/${card.card_id}`}
-							className='btn-secondary p-2 flex items-center justify-center'
-							aria-label='View card page'
-							title='View card page'
-						>
-							<HiLink className='w-4 h-4' />
-						</Link>
 					</div>
 				</div>
 			</div>

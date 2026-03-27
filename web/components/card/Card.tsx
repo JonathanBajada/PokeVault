@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
 import { Card as CardType } from '@/lib/api/cards';
 
@@ -85,7 +84,7 @@ export default function Card({ card, onClick, binderEntry, onToggleBinder }: Car
 			<div className='rarity-label-bar' data-rarity={getRarityColorCategory()}>{getRarityLabel()}</div>
 
 			{/* ── Content ── */}
-			<div className='flex flex-col' style={{ background: 'rgba(22, 30, 46, 1)' }}>
+			<div className='flex flex-col rounded-b-[0.6rem]' style={{ background: 'rgba(22, 30, 46, 1)' }}>
 				<div className='px-6 pt-4 pb-3 flex-grow'>
 					<h3 className='card-title line-clamp-2 min-h-[2.5rem]'>{card.name}</h3>
 					{card.set_name && <p className='card-set-name line-clamp-1'>{card.set_name}</p>}
@@ -100,18 +99,6 @@ export default function Card({ card, onClick, binderEntry, onToggleBinder }: Car
 					</div>
 
 					<div className='px-6 pt-3 pb-6 flex gap-2 shrink-0'>
-						{/* View page */}
-						<Link
-							href={`/card/${card.id}`}
-							onClick={(e) => e.stopPropagation()}
-							className='btn-secondary p-2.5 flex items-center justify-center'
-							title='View card page'
-						>
-							<svg xmlns='http://www.w3.org/2000/svg' className='w-5 h-5' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
-								<path strokeLinecap='round' strokeLinejoin='round' d='M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1' />
-							</svg>
-						</Link>
-
 						{/* Want (heart) */}
 						<div className='relative'>
 							{showLoginPrompt && (

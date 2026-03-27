@@ -31,6 +31,15 @@ export async function findUserById(id: string): Promise<User | null> {
 	return result.rows[0] ?? null;
 }
 
+export async function findUserByUsername(username: string): Promise<User | null> {
+	const result = await pool.query<User>(
+		`SELECT id, email, username, created_at, updated_at
+		 FROM users WHERE lower(username) = lower($1)`,
+		[username],
+	);
+	return result.rows[0] ?? null;
+}
+
 export async function createUser(
 	email: string,
 	username: string,

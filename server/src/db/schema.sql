@@ -274,6 +274,19 @@ CREATE INDEX idx_binder_cards_intent ON binder_cards(intent) WHERE intent IS NOT
 -- Note: Sale validation can be added later when pricing logic is implemented
 
 -- =========================================
+-- 1️⃣5️⃣ PRICE_HISTORY
+-- Accumulates price snapshots on every import run
+-- =========================================
+CREATE TABLE price_history (
+  id          SERIAL PRIMARY KEY,
+  card_id     TEXT NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
+  price       NUMERIC(10, 2),
+  recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_price_history_card_recorded ON price_history (card_id, recorded_at DESC);
+
+-- =========================================
 -- Notes for future extensibility:
 -- 
 -- This schema is designed to be additive:
