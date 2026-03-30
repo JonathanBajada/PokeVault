@@ -256,10 +256,11 @@ export default function CardCollection({
 						</div>
 						<div className='card-grid-background'>
 							<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8'>
-								{data.data.map((card) => (
+								{data.data.map((card, index) => (
 									<Card
 										key={card.id}
 										card={card}
+										priority={index < 6}
 										onClick={() => router.push(`/card/${card.id}`)}
 										binderEntry={binderEntryMap.get(card.id) ?? null}
 										onToggleBinder={session?.user.id ? async (intent) => {
