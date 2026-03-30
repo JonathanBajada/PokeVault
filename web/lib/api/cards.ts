@@ -94,29 +94,6 @@ export async function fetchCards({
 	}
 
 	const data = await res.json();
-
-	// Log the cards data for debugging
-	console.log('📦 Cards API Response:', {
-		page: data.page,
-		limit: data.limit,
-		total: data.total,
-		cardsCount: data.data?.length || 0,
-	});
-
-	// Log first few cards to see structure
-	if (data.data && data.data.length > 0) {
-		console.log(
-			'🃏 Sample cards (first 3):',
-			data.data.slice(0, 3).map((card: Card) => ({
-				id: card.id,
-				name: card.name,
-				image_small_url: card.image_small_url,
-				set_name: card.set_name,
-				rarity: card.rarity,
-			})),
-		);
-	}
-
 	return data;
 }
 
