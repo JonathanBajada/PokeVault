@@ -9,6 +9,7 @@ import {
 	fetchSets,
 	fetchRarities,
 	fetchCardTypes,
+	Card as CardType,
 } from '@/lib/api/cards';
 import { addCardToBinder, updateBinderCard, fetchBinder } from '@/lib/api/binder';
 import Card from '@/components/card/Card';
