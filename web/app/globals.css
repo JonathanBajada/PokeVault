@@ -160,7 +160,7 @@ body::after {
 /* ---------- Navbar ---------- */
 .navbar {
 	background: var(--navbar-bg-gradient);
-	/* backdrop-filter: blur(10px); removed for scroll performance */
+	backdrop-filter: blur(10px);
 	border-bottom: 1px solid var(--border-default);
 	box-shadow: 0 1px 0 var(--white-overlay-04);
 }
@@ -229,7 +229,7 @@ body::after {
 .navbar-link-active {
 	color: var(--navbar-link-text);
 	background: var(--navbar-link-bg-active);
-	/* backdrop-filter: blur(4px); removed for scroll performance */
+	backdrop-filter: blur(4px);
 	box-shadow: var(--shadow-md);
 }
 
@@ -552,7 +552,7 @@ body::after {
 	font-size: 0.65rem;
 	border-radius: 999px;
 	border: 1px solid var(--white-overlay-15);
-	/* backdrop-filter: blur(8px); removed for scroll performance */
+	backdrop-filter: blur(8px);
 	color: var(--text-primary);
 	opacity: 0.75;
 }
