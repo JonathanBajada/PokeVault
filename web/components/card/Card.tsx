@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Card as CardType } from '@/lib/api/cards';
 
 export type BinderEntry = {
@@ -58,7 +59,7 @@ export default function Card({ card, onClick, binderEntry, onToggleBinder }: Car
 			{/* ── Image ── */}
 			<div className='card-image-wrapper' data-rarity={getRarityColorCategory()}>
 				{card.image_small_url ? (
-					<img src={card.image_small_url} alt={card.name} loading='lazy' />
+					<Image src={card.image_small_url} alt={card.name} fill sizes='(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw' style={{ objectFit: 'contain' }} />
 				) : (
 					<div className='w-full h-full flex items-center justify-center' style={{ backgroundColor: 'var(--bg-elevated)' }}>
 						<div style={{ color: 'var(--text-muted)' }} className='text-sm'>No Image</div>
