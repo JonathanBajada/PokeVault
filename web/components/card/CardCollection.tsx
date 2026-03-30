@@ -9,7 +9,6 @@ import {
 	fetchSets,
 	fetchRarities,
 	fetchCardTypes,
-	Card as CardType,
 } from '@/lib/api/cards';
 import { addCardToBinder, updateBinderCard, fetchBinder } from '@/lib/api/binder';
 import Card from '@/components/card/Card';
@@ -146,31 +145,6 @@ export default function CardCollection({
 
 	const totalPages = data ? Math.ceil(data.total / limit) : 0;
 
-	// Log cards data when it changes
-	useEffect(() => {
-		if (data) {
-			console.log('🎴 CardCollection - Cards received:', {
-				total: data.total,
-				page: data.page,
-				limit: data.limit,
-				cardsInThisPage: data.data?.length || 0,
-			});
-
-			if (data.data && data.data.length > 0) {
-				console.log(
-					'🃏 All cards in this page:',
-					data.data.map((card: CardType) => ({
-						id: card.id,
-						name: card.name,
-						image_small_url: card.image_small_url || 'MISSING',
-						hasImage: !!card.image_small_url,
-						set_name: card.set_name,
-						rarity: card.rarity,
-					})),
-				);
-			}
-		}
-	}, [data]);
 
 	const handlePageChange = (newPage: number) => {
 		setPage(newPage);
